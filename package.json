@@ -1,7 +1,7 @@
 {
-  "name": "video-engine",
-  "version": "1.0.0",
-  "description": "Remotion-based video production engine for product demo videos. Transcript-first workflow with word-level subtitles, face-cam bubbles, keyword overlays, and notification banners.",
+  "name": "opencut",
+  "version": "0.1.0",
+  "description": "Remotion-based video production engine. Record, transcribe, compose, render.",
   "scripts": {
     "preview": "npx remotion studio src/examples/openslides/index.ts",
     "render": "timeout 10m npx remotion render src/examples/openslides/index.ts OpenSlidesDemo out/openslides-demo.mp4",

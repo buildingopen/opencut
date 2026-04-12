@@ -1,5 +1,5 @@
 /**
- * video-engine -- Remotion-based video production engine.
+ * OpenCut -- Remotion-based video production engine.
  *
  * Import the components and types you need:
  *
