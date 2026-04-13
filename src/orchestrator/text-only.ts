@@ -30,54 +30,62 @@ export async function runTextOnlyPipeline(req: TextOnlyRequest): Promise<void> {
   const assetsDir = jobAssetsDir(jobId);
   fs.mkdirSync(assetsDir, { recursive: true });
 
-  // ── Step 1: AI scene planning ──────────────────────────────────────────────
-  updateJob(jobId, { status: "running", phase: "planning" });
-  const plan = await generateScenePlan({ prompt, targetDurationSec });
+  try {
+    // ── Step 1: AI scene planning ────────────────────────────────────────────
+    updateJob(jobId, { status: "running", phase: "planning" });
+    const plan = await generateScenePlan({ prompt, targetDurationSec });
 
-  // ── Step 2: ElevenLabs text-to-speech ─────────────────────────────────────
-  updateJob(jobId, { phase: "tts" });
-  const voicePath = path.join(assetsDir, "voiceover.mp3");
-  await textToSpeech({ text: plan.fullNarration, voice, outputPath: voicePath });
+    // ── Step 2: ElevenLabs text-to-speech ───────────────────────────────────
+    updateJob(jobId, { phase: "tts" });
+    const voicePath = path.join(assetsDir, "voiceover.mp3");
+    await textToSpeech({ text: plan.fullNarration, voice, outputPath: voicePath });
 
-  // ── Step 3: Pexels stock footage download (parallel) ──────────────────────
-  updateJob(jobId, { phase: "footage" });
-  const clips: ClipSegment[] = await Promise.all(
-    plan.scenes.map(async (scene, i) => {
-      const padded = String(i).padStart(2, "0");
-      const clipPath = path.join(assetsDir, `scene-${padded}.mp4`);
+    // ── Step 3: Pexels stock footage download (parallel) ────────────────────
+    updateJob(jobId, { phase: "footage" });
+    const clips: ClipSegment[] = await Promise.all(
+      plan.scenes.map(async (scene, i) => {
+        const padded = String(i).padStart(2, "0");
+        const clipPath = path.join(assetsDir, `scene-${padded}.mp4`);
 
-      const videos = await searchVideos(scene.pexelsQuery, scene.durationSec);
+        const videos = await searchVideos(scene.pexelsQuery, scene.durationSec);
 
-      if (videos.length === 0) {
-        // Fallback: generic query using first two words of narration
-        const fallbackQuery = scene.narrationText.split(" ").slice(0, 3).join(" ");
-        const fallback = await searchVideos(fallbackQuery, scene.durationSec);
-        if (fallback.length === 0) {
-          throw new Error(
-            `No Pexels footage found for scene ${scene.id} (query: "${scene.pexelsQuery}", fallback: "${fallbackQuery}")`,
-          );
+        if (videos.length === 0) {
+          // Fallback: generic query using first three words of narration
+          const fallbackQuery = scene.narrationText.split(" ").slice(0, 3).join(" ");
+          const fallback = await searchVideos(fallbackQuery, scene.durationSec);
+          if (fallback.length === 0) {
+            throw new Error(
+              `No Pexels footage found for scene ${scene.id} (query: "${scene.pexelsQuery}", fallback: "${fallbackQuery}")`,
+            );
+          }
+          await downloadVideo(fallback[0]!, clipPath);
+        } else {
+          await downloadVideo(videos[0]!, clipPath);
         }
-        await downloadVideo(fallback[0]!, clipPath);
-      } else {
-        await downloadVideo(videos[0]!, clipPath);
-      }
 
-      return {
-        videoPath: clipPath,
-        durationSec: scene.durationSec,
-        caption: scene.caption ?? undefined,
-      };
-    }),
-  );
+        return {
+          videoPath: clipPath,
+          durationSec: scene.durationSec,
+          caption: scene.caption ?? undefined,
+        };
+      }),
+    );
 
-  // ── Step 4: ffmpeg render ──────────────────────────────────────────────────
-  updateJob(jobId, { phase: "rendering" });
-  const out = outputFile(jobId);
-  await renderWithFfmpeg({
-    clips,
-    audioPath: voicePath,
-    outputPath: out,
-  });
+    // ── Step 4: ffmpeg render ────────────────────────────────────────────────
+    updateJob(jobId, { phase: "rendering" });
+    const out = outputFile(jobId);
+    await renderWithFfmpeg({
+      clips,
+      audioPath: voicePath,
+      outputPath: out,
+    });
 
-  updateJob(jobId, { status: "done", phase: "done" });
+    updateJob(jobId, { status: "done", phase: "done" });
+  } catch (err) {
+    updateJob(jobId, {
+      status: "error",
+      error: err instanceof Error ? err.message : String(err),
+    });
+    throw err;
+  }
 }

@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-export const GEMINI_FLASH = "gemini-2.0-flash";
-export const GEMINI_PRO = "gemini-1.5-pro";
+export const GEMINI_FLASH = "gemini-3-flash-preview";
+export const GEMINI_PRO = "gemini-3.1-pro-preview";
 
 export function getGeminiModel(modelId: string = GEMINI_FLASH) {
   const apiKey = process.env.GEMINI_API_KEY;
