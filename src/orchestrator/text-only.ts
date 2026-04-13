@@ -6,11 +6,27 @@
  */
 import fs from "fs";
 import path from "path";
+import { execFile } from "child_process";
+import { promisify } from "util";
 import { generateScenePlan } from "../ai/planner";
 import { textToSpeech, type VoiceId } from "../tools/elevenlabs";
 import { searchVideos, downloadVideo } from "../tools/pexels";
 import { renderWithFfmpeg, type ClipSegment } from "../tools/ffmpeg";
 import { jobAssetsDir, outputFile, updateJob } from "../api/jobs";
+
+const execFileAsync = promisify(execFile);
+
+/** Returns the actual duration in seconds of a video file using ffprobe. */
+async function probeVideoDuration(filePath: string): Promise<number> {
+  const { stdout } = await execFileAsync("ffprobe", [
+    "-v", "quiet",
+    "-print_format", "json",
+    "-show_format",
+    filePath,
+  ]);
+  const parsed = JSON.parse(stdout) as { format: { duration?: string } };
+  return parseFloat(parsed.format.duration ?? "0");
+}
 
 export interface TextOnlyRequest {
   jobId: string;
@@ -63,9 +79,14 @@ export async function runTextOnlyPipeline(req: TextOnlyRequest): Promise<void> {
           await downloadVideo(videos[0]!, clipPath);
         }
 
+        // Use the actual downloaded clip duration (capped at planned duration)
+        // to ensure A/V sync: ffmpeg -t will not exceed clip length
+        const actualDuration = await probeVideoDuration(clipPath);
+        const durationSec = Math.min(scene.durationSec, actualDuration > 0 ? actualDuration : scene.durationSec);
+
         return {
           videoPath: clipPath,
-          durationSec: scene.durationSec,
+          durationSec,
           caption: scene.caption ?? undefined,
         };
       }),

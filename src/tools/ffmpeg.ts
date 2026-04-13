@@ -90,15 +90,19 @@ export async function renderWithFfmpeg(
     `${concatInputs}concat=n=${opts.clips.length}:v=1:a=0[vout]`,
   );
 
+  // Total video duration (sum of all clip durations)
+  const totalDurationSec = opts.clips.reduce((sum, c) => sum + c.durationSec, 0);
+
   // Audio mixing: voiceover at volume 1.0 + optional bg music
+  // Trim audio to total video duration to prevent audio overrun
   if (hasBgMusic) {
     // bg music is the last input, after all video clips
     const bgMusicIdx = opts.clips.length + 1;
     filterParts.push(
-      `[0:a]volume=1.0[voiceover];[${bgMusicIdx}:a]volume=${bgMusicVolume}[bgm];[voiceover][bgm]amix=inputs=2:duration=first[aout]`,
+      `[0:a]atrim=0:${totalDurationSec},volume=1.0[voiceover];[${bgMusicIdx}:a]volume=${bgMusicVolume}[bgm];[voiceover][bgm]amix=inputs=2:duration=first[aout]`,
     );
   } else {
-    filterParts.push(`[0:a]volume=1.0[aout]`);
+    filterParts.push(`[0:a]atrim=0:${totalDurationSec},volume=1.0[aout]`);
   }
 
   args.push("-filter_complex", filterParts.join(";"));

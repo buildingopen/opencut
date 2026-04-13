@@ -7,12 +7,13 @@ const execFileAsync = promisify(execFile);
 
 export type VoiceId = "rachel" | "adam" | "josh" | "elli" | "bella";
 
+// Voice IDs verified working on free tier (newer premade voices)
 const VOICE_IDS: Record<VoiceId, string> = {
-  rachel: "21m00Tcm4TlvDq8ikWAM",
-  adam: "pNInz6obpgDQGcFmaJgB",
-  josh: "TxGEqnHWrfWFTfGW9XjX",
-  elli: "MF3mGyEYCl7XYWbV9V6O",
-  bella: "EXAVITQu4vr4xnSDxMaL",
+  rachel: "EXAVITQu4vr4xnSDxMaL", // Sarah - Mature, Reassuring (legacy rachel ID blocked on free tier)
+  adam: "pNInz6obpgDQGcFmaJgB",   // Adam - Dominant, Firm
+  josh: "TX3LPaxmHKxFdv7VOQHJ",   // Liam - Energetic (legacy josh ID blocked on free tier)
+  elli: "cgSgspJ2msm6clMCkdW9",   // Jessica - Playful, Bright (legacy elli ID blocked on free tier)
+  bella: "hpp4J3VqNfWAUOO0d1Us",  // Bella - Professional, Bright
 };
 
 export interface TtsOptions {
