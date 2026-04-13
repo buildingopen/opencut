@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import fs from "fs";
-import { createJob, getJob, outputFile } from "./jobs";
+import { createJob, getJob, outputFile, updateJob } from "./jobs";
 import { renderJob } from "./renderer";
 import { runTextOnlyPipeline } from "../orchestrator/text-only";
 import type { VoiceId } from "../tools/elevenlabs";
@@ -27,8 +27,10 @@ app.post("/render", (req: Request, res: Response) => {
 
   // Fire-and-forget — rendering is async, client polls GET /jobs/:id
   renderJob({ jobId: job.jobId, compositionId, entryPoint, inputProps }).catch(
-    (err: unknown) =>
-      console.error(`[renderer] job ${job.jobId} failed:`, err),
+    (err: unknown) => {
+      console.error(`[renderer] job ${job.jobId} failed:`, err);
+      updateJob(job.jobId, { status: "error", error: String(err) });
+    },
   );
 
   res.status(202).json({ jobId: job.jobId });
@@ -87,9 +89,10 @@ app.post("/generate", (req: Request, res: Response) => {
     prompt,
     targetDurationSec,
     voice,
-  }).catch((err: unknown) =>
-    console.error(`[orchestrator] job ${job.jobId} failed:`, err),
-  );
+  }).catch((err: unknown) => {
+    console.error(`[orchestrator] job ${job.jobId} failed:`, err);
+    updateJob(job.jobId, { status: "error", error: String(err) });
+  });
 
   res.status(202).json({ jobId: job.jobId });
 });
