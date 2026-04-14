@@ -9,6 +9,10 @@
  *
  * Source video: facecam, raw duration ~523.5s at 1x speed.
  * At playbackRate 1.2, rendered duration ≈ 436s (~7.3min).
+ *
+ * A/V SYNC: each segment's facecamStartSec must equal the cumulative
+ * sum of all preceding durationSec values. Any mismatch causes
+ * audio/video drift from that point onward.
  */
 import type { TimelineSegment } from "../../engine";
 
@@ -26,7 +30,8 @@ export const TIMELINE: TimelineSegment[] = [
       { text: "VibeCoder → AI Engineer", position: "center", delaySec: 0, durationSec: 1.5 },
     ],
     keywords: [
-      { text: "VibeCoder", startSec: 1, endSec: 5 },
+      // startSec 2 (not 1) so it doesn't overlap with callout (0–1.5s raw)
+      { text: "VibeCoder", startSec: 2, endSec: 6 },
     ],
   },
 
@@ -72,7 +77,7 @@ export const TIMELINE: TimelineSegment[] = [
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      { text: "GitHub", startSec: 40, endSec: 44 },
+      // "GitHub" keyword removed — outside window (was startSec:40, window starts at 46)
       { text: "Version Control", startSec: 47, endSec: 51 },
       { text: "Every Change Saved", startSec: 53, endSec: 57 },
       { text: "Branches", startSec: 63, endSec: 67 },
@@ -95,19 +100,21 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 115-165s: Branches & PRs — stop breaking working code
+  // 115-164s: Branches & PRs — stop breaking working code
+  // durationSec 49 (not 50) so next slide starts exactly at facecamStartSec 164
   {
     id: "s04-branches-prs",
     type: "facecam-full",
     facecamStartSec: 115,
-    durationSec: 50,
+    durationSec: 49,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      { text: "Branches", startSec: 107, endSec: 111 },
-      { text: "Merge Conflicts", startSec: 109, endSec: 113 },
-      { text: "Pull Requests", startSec: 124, endSec: 128 },
-      { text: "Feature Branch", startSec: 130, endSec: 134 },
+      // Shifted into window (was 107, 109 — both outside 115-164)
+      { text: "Branches", startSec: 117, endSec: 121 },
+      { text: "Merge Conflicts", startSec: 122, endSec: 126 },
+      { text: "Pull Requests", startSec: 128, endSec: 132 },
+      { text: "Feature Branch", startSec: 134, endSec: 138 },
       { text: "Atomic Commits", startSec: 148, endSec: 152 },
       { text: "Rollback", startSec: 157, endSec: 161 },
     ],
@@ -128,11 +135,12 @@ export const TIMELINE: TimelineSegment[] = [
   },
 
   // 174-220s: CI/CD Pipelines — prevent regressions
+  // durationSec 46 (not 47) so next slide starts exactly at facecamStartSec 220
   {
     id: "s05-cicd",
     type: "facecam-full",
     facecamStartSec: 174,
-    durationSec: 47,
+    durationSec: 46,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
@@ -159,18 +167,19 @@ export const TIMELINE: TimelineSegment[] = [
   },
 
   // 228-244s: Testing Types — unit, integration, end-to-end
+  // durationSec 16 (not 17) so next slide starts exactly at facecamStartSec 244
   {
     id: "s06-testing-types",
     type: "facecam-full",
     facecamStartSec: 228,
-    durationSec: 17,
+    durationSec: 16,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      { text: "Unit Tests", startSec: 222, endSec: 226 },
-      { text: "Integration", startSec: 225, endSec: 229 },
-      { text: "End-to-End", startSec: 228, endSec: 232 },
-      { text: "Automated", startSec: 231, endSec: 235 },
+      // Shifted into window (was 222, 225 — both outside 228-244); 3 keywords fit cleanly
+      { text: "Unit Tests", startSec: 229, endSec: 233 },
+      { text: "Integration", startSec: 234, endSec: 238 },
+      { text: "End-to-End", startSec: 239, endSec: 243 },
     ],
   },
 
@@ -228,8 +237,9 @@ export const TIMELINE: TimelineSegment[] = [
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      { text: "Debugging", startSec: 294, endSec: 298 },
-      { text: "Automate Tests", startSec: 305, endSec: 309 },
+      // Shifted into window (was 294 — outside 301-353)
+      { text: "Debugging", startSec: 302, endSec: 306 },
+      { text: "Automate Tests", startSec: 308, endSec: 312 },
       { text: "Happy Path", startSec: 318, endSec: 322 },
       { text: "Unhappy Path", startSec: 324, endSec: 328 },
       { text: "Browser Access", startSec: 334, endSec: 338 },
@@ -251,20 +261,22 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 361-402s: Docs & GitHub Issues — README, MD files, issue tracking
+  // 361-396s: Docs & GitHub Issues — README, MD files, issue tracking
+  // durationSec 35 (not 36) so next slide starts exactly at facecamStartSec 396
   {
     id: "s09-docs-issues",
     type: "facecam-full",
     facecamStartSec: 361,
-    durationSec: 36,
+    durationSec: 35,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      { text: "README", startSec: 358, endSec: 362 },
-      { text: "MD Files", startSec: 362, endSec: 366 },
-      { text: "Markdown", startSec: 364, endSec: 368 },
+      // Shifted into window (was 358 — outside 361-396); spaced to avoid overlap
+      { text: "README", startSec: 363, endSec: 367 },
+      { text: "MD Files", startSec: 369, endSec: 373 },
+      { text: "Markdown", startSec: 375, endSec: 379 },
       { text: "GitHub Issues", startSec: 383, endSec: 387 },
-      { text: "Tickets", startSec: 387, endSec: 391 },
+      { text: "Tickets", startSec: 388, endSec: 392 },
     ],
   },
 
@@ -283,22 +295,27 @@ export const TIMELINE: TimelineSegment[] = [
   },
 
   // 408-490s: AI Superpower — agents, quality loops, autonomous review
+  // FIX 1: faceBubble "hidden" (not "bottom-left") — facecam-full shows face as bg already
+  // durationSec 82 (not 83) so outro starts exactly at facecamStartSec 490
   {
     id: "s10-ai-superpower",
     type: "facecam-full",
     facecamStartSec: 408,
-    durationSec: 83,
-    faceBubble: "bottom-left",
+    durationSec: 82,
+    faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      { text: "AI Superpower", startSec: 396, endSec: 400 },
-      { text: "Ask AI Anything", startSec: 406, endSec: 410 },
+      // Shifted into window (was 396, 406 — both outside 408-490)
+      { text: "AI Superpower", startSec: 410, endSec: 414 },
+      { text: "Ask AI Anything", startSec: 416, endSec: 420 },
       { text: "Remove Yourself", startSec: 428, endSec: 432 },
       { text: "Quality Loops", startSec: 443, endSec: 447 },
       { text: "Autonomous Agents", startSec: 454, endSec: 458 },
       { text: "Coding + Review", startSec: 476, endSec: 480 },
-      { text: "10/10 Happy", startSec: 479, endSec: 483 },
-      { text: "Score 0-10", startSec: 491, endSec: 495 },
+      // Shifted to avoid overlap with Coding+Review (was 479-483)
+      { text: "10/10 Happy", startSec: 481, endSec: 485 },
+      // Shifted into window (was 491-495, outside 408-490)
+      { text: "Score 0-10", startSec: 486, endSec: 490 },
     ],
   },
 
