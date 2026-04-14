@@ -49,17 +49,28 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 36-105s: GitHub — version control, fix the chaos
+  // 36-46s: GitHub slide (screen-static with facecam PiP)
   {
-    id: "s03-github",
-    type: "facecam-full",
+    id: "s03-github-slide",
+    type: "screen-static",
     facecamStartSec: 36,
-    durationSec: 69,
-    faceBubble: "hidden",
+    durationSec: 10,
+    faceBubble: "bottom-left",
     showSubtitles: true,
+    screenImage: "ae-slides/github.png",
     callouts: [
       { text: "GitHub", position: "center", delaySec: 0, durationSec: 1.5 },
     ],
+  },
+
+  // 46-105s: GitHub — version control, fix the chaos
+  {
+    id: "s03-github",
+    type: "facecam-full",
+    facecamStartSec: 46,
+    durationSec: 59,
+    faceBubble: "hidden",
+    showSubtitles: true,
     keywords: [
       { text: "GitHub", startSec: 40, endSec: 44 },
       { text: "Version Control", startSec: 47, endSec: 51 },
@@ -91,17 +102,28 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 164-220s: CI/CD Pipelines — prevent regressions
+  // 164-174s: CI/CD slide (screen-static with facecam PiP)
   {
-    id: "s05-cicd",
-    type: "facecam-full",
+    id: "s05-cicd-slide",
+    type: "screen-static",
     facecamStartSec: 164,
-    durationSec: 57,
-    faceBubble: "hidden",
+    durationSec: 10,
+    faceBubble: "bottom-left",
     showSubtitles: true,
+    screenImage: "ae-slides/cicd.png",
     callouts: [
       { text: "CI/CD Pipeline", position: "center", delaySec: 0, durationSec: 1.5 },
     ],
+  },
+
+  // 174-220s: CI/CD Pipelines — prevent regressions
+  {
+    id: "s05-cicd",
+    type: "facecam-full",
+    facecamStartSec: 174,
+    durationSec: 47,
+    faceBubble: "hidden",
+    showSubtitles: true,
     keywords: [
       { text: "CI/CD Pipeline", startSec: 176, endSec: 180 },
       { text: "Auto Checks", startSec: 185, endSec: 189 },
@@ -111,17 +133,28 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 220-244s: Testing Types — unit, integration, end-to-end
+  // 220-228s: Testing slide (screen-static with facecam PiP)
   {
-    id: "s06-testing-types",
-    type: "facecam-full",
+    id: "s06-testing-types-slide",
+    type: "screen-static",
     facecamStartSec: 220,
-    durationSec: 25,
-    faceBubble: "hidden",
+    durationSec: 8,
+    faceBubble: "bottom-left",
     showSubtitles: true,
+    screenImage: "ae-slides/testing.png",
     callouts: [
       { text: "Testing", position: "center", delaySec: 0, durationSec: 1.5 },
     ],
+  },
+
+  // 228-244s: Testing Types — unit, integration, end-to-end
+  {
+    id: "s06-testing-types",
+    type: "facecam-full",
+    facecamStartSec: 228,
+    durationSec: 17,
+    faceBubble: "hidden",
+    showSubtitles: true,
     keywords: [
       { text: "Unit Tests", startSec: 222, endSec: 226 },
       { text: "Integration", startSec: 225, endSec: 229 },
@@ -130,17 +163,28 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 244-291s: Deployment — Vercel, Render, Railway
+  // 244-254s: Deployment slide (screen-static with facecam PiP)
   {
-    id: "s07-deployment",
-    type: "facecam-full",
+    id: "s07-deployment-slide",
+    type: "screen-static",
     facecamStartSec: 244,
-    durationSec: 47,
-    faceBubble: "hidden",
+    durationSec: 10,
+    faceBubble: "bottom-left",
     showSubtitles: true,
+    screenImage: "ae-slides/deployment.png",
     callouts: [
       { text: "Deployment", position: "center", delaySec: 0, durationSec: 1.5 },
     ],
+  },
+
+  // 254-291s: Deployment — Vercel, Render, Railway
+  {
+    id: "s07-deployment",
+    type: "facecam-full",
+    facecamStartSec: 254,
+    durationSec: 37,
+    faceBubble: "hidden",
+    showSubtitles: true,
     keywords: [
       { text: "Vercel", startSec: 258, endSec: 262 },
       { text: "Render & Railway", startSec: 264, endSec: 268 },
