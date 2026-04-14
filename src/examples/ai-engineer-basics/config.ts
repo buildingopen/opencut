@@ -7,14 +7,14 @@
 import type { VideoConfig } from "../../engine";
 
 export const AI_ENGINEER_CONFIG: VideoConfig = {
-  playbackRate: 1.2,
+  playbackRate: 1.35,
   fps: 30,
   width: 1920,
   height: 1080,
   crossfadeFrames: 10,
   facecamAsset: "ai-engineer-basics.mov",
   bgMusicAsset: "bg-music.mp3",
-  bgMusicVolume: 0.07,
+  bgMusicVolume: 0.04,
 };
 
 /** Audio offset correction in seconds (Whisper timestamps vs. actual audio). */
