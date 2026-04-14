@@ -81,17 +81,28 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 105-165s: Branches & PRs — stop breaking working code
+  // 105-115s: Branches & PRs slide (screen-static with facecam PiP)
   {
-    id: "s04-branches-prs",
-    type: "facecam-full",
+    id: "s04-branches-prs-slide",
+    type: "screen-static",
     facecamStartSec: 105,
-    durationSec: 60,
-    faceBubble: "hidden",
+    durationSec: 10,
+    faceBubble: "bottom-left",
     showSubtitles: true,
+    screenImage: "ae-slides/branches.png",
     callouts: [
       { text: "Branches & PRs", position: "center", delaySec: 0, durationSec: 1.5 },
     ],
+  },
+
+  // 115-165s: Branches & PRs — stop breaking working code
+  {
+    id: "s04-branches-prs",
+    type: "facecam-full",
+    facecamStartSec: 115,
+    durationSec: 50,
+    faceBubble: "hidden",
+    showSubtitles: true,
     keywords: [
       { text: "Branches", startSec: 107, endSec: 111 },
       { text: "Merge Conflicts", startSec: 109, endSec: 113 },
@@ -194,17 +205,28 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 291-353s: Debugging & Testing Agents
+  // 291-301s: Debugging Agents slide (screen-static with facecam PiP)
   {
-    id: "s08-debugging-agents",
-    type: "facecam-full",
+    id: "s08-debugging-agents-slide",
+    type: "screen-static",
     facecamStartSec: 291,
-    durationSec: 62,
-    faceBubble: "hidden",
+    durationSec: 10,
+    faceBubble: "bottom-left",
     showSubtitles: true,
+    screenImage: "ae-slides/debugging.png",
     callouts: [
       { text: "Debugging Agents", position: "center", delaySec: 0, durationSec: 1.5 },
     ],
+  },
+
+  // 301-353s: Debugging & Testing Agents
+  {
+    id: "s08-debugging-agents",
+    type: "facecam-full",
+    facecamStartSec: 301,
+    durationSec: 52,
+    faceBubble: "hidden",
+    showSubtitles: true,
     keywords: [
       { text: "Debugging", startSec: 294, endSec: 298 },
       { text: "Automate Tests", startSec: 305, endSec: 309 },
@@ -215,17 +237,28 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 353-402s: Docs & GitHub Issues — README, MD files, issue tracking
+  // 353-361s: Docs & Issues slide (screen-static with facecam PiP)
   {
-    id: "s09-docs-issues",
-    type: "facecam-full",
+    id: "s09-docs-issues-slide",
+    type: "screen-static",
     facecamStartSec: 353,
-    durationSec: 44,
-    faceBubble: "hidden",
+    durationSec: 8,
+    faceBubble: "bottom-left",
     showSubtitles: true,
+    screenImage: "ae-slides/docs.png",
     callouts: [
       { text: "Docs & Issues", position: "center", delaySec: 0, durationSec: 1.5 },
     ],
+  },
+
+  // 361-402s: Docs & GitHub Issues — README, MD files, issue tracking
+  {
+    id: "s09-docs-issues",
+    type: "facecam-full",
+    facecamStartSec: 361,
+    durationSec: 36,
+    faceBubble: "hidden",
+    showSubtitles: true,
     keywords: [
       { text: "README", startSec: 358, endSec: 362 },
       { text: "MD Files", startSec: 362, endSec: 366 },
@@ -235,17 +268,28 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 396-490s: AI Superpower — agents, quality loops, autonomous review
+  // 396-408s: AI Superpower slide (screen-static with facecam PiP)
   {
-    id: "s10-ai-superpower",
-    type: "facecam-full",
+    id: "s10-ai-superpower-slide",
+    type: "screen-static",
     facecamStartSec: 396,
-    durationSec: 95,
+    durationSec: 12,
     faceBubble: "bottom-left",
     showSubtitles: true,
+    screenImage: "ae-slides/ai-superpower.png",
     callouts: [
       { text: "AI Superpower", position: "center", delaySec: 0, durationSec: 1.5 },
     ],
+  },
+
+  // 408-490s: AI Superpower — agents, quality loops, autonomous review
+  {
+    id: "s10-ai-superpower",
+    type: "facecam-full",
+    facecamStartSec: 408,
+    durationSec: 83,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
     keywords: [
       { text: "AI Superpower", startSec: 396, endSec: 400 },
       { text: "Ask AI Anything", startSec: 406, endSec: 410 },

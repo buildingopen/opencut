@@ -13,7 +13,8 @@ export const AI_ENGINEER_CONFIG: VideoConfig = {
   height: 1080,
   crossfadeFrames: 10,
   facecamAsset: "ai-engineer-basics.mov",
-  // bgMusicAsset: "bg-music.mp3", // TODO: add once music is selected
+  bgMusicAsset: "bg-music.mp3",
+  bgMusicVolume: 0.07,
 };
 
 /** Audio offset correction in seconds (Whisper timestamps vs. actual audio). */
