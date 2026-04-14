@@ -1,6 +1,5 @@
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import fs from "fs";
 import { GEMINI_FLASH } from "../ai/gemini";
 
 export interface TranscriptSegment {
@@ -25,6 +24,22 @@ export async function transcribeVideo(videoPath: string): Promise<TranscriptResu
     mimeType,
     displayName: `opencut-${Date.now()}`,
   });
+
+  // Wait for file to reach ACTIVE state before using it
+  const fileName = uploadResult.file.name;
+  let fileState = uploadResult.file.state;
+  const pollDeadline = Date.now() + 120_000; // 2 min max
+  while (fileState !== "ACTIVE") {
+    if (fileState === "FAILED") {
+      throw new Error(`Gemini file processing failed: ${fileName}`);
+    }
+    if (Date.now() > pollDeadline) {
+      throw new Error(`Timed out waiting for Gemini file ${fileName} to become ACTIVE`);
+    }
+    await new Promise((r) => setTimeout(r, 3000));
+    const fileInfo = await fileManager.getFile(fileName);
+    fileState = fileInfo.state;
+  }
 
   const fileUri = uploadResult.file.uri;
 
