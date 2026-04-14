@@ -22,6 +22,9 @@ export const TIMELINE: TimelineSegment[] = [
     faceBubble: "hidden",
     showSubtitles: true,
     showTitleCard: true,
+    callouts: [
+      { text: "VibeCoder → AI Engineer", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
     keywords: [
       { text: "VibeCoder", startSec: 1, endSec: 5 },
     ],
@@ -35,8 +38,14 @@ export const TIMELINE: TimelineSegment[] = [
     durationSec: 29,
     faceBubble: "hidden",
     showSubtitles: true,
+    callouts: [
+      { text: "The Problem", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
     keywords: [
       { text: "Chaos", startSec: 13, endSec: 17 },
+      { text: "Nothing Works", startSec: 19, endSec: 23 },
+      { text: "Can't Go Back", startSec: 25, endSec: 29 },
+      { text: "Everything Breaks", startSec: 30, endSec: 34 },
     ],
   },
 
@@ -48,9 +57,16 @@ export const TIMELINE: TimelineSegment[] = [
     durationSec: 69,
     faceBubble: "hidden",
     showSubtitles: true,
+    callouts: [
+      { text: "GitHub", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
     keywords: [
       { text: "GitHub", startSec: 40, endSec: 44 },
       { text: "Version Control", startSec: 47, endSec: 51 },
+      { text: "Every Change Saved", startSec: 53, endSec: 57 },
+      { text: "Branches", startSec: 63, endSec: 67 },
+      { text: "Staging Preview", startSec: 73, endSec: 77 },
+      { text: "Preview Mode", startSec: 92, endSec: 96 },
     ],
   },
 
@@ -62,10 +78,16 @@ export const TIMELINE: TimelineSegment[] = [
     durationSec: 60,
     faceBubble: "hidden",
     showSubtitles: true,
+    callouts: [
+      { text: "Branches & PRs", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
     keywords: [
       { text: "Branches", startSec: 107, endSec: 111 },
+      { text: "Merge Conflicts", startSec: 109, endSec: 113 },
       { text: "Pull Requests", startSec: 124, endSec: 128 },
+      { text: "Feature Branch", startSec: 130, endSec: 134 },
       { text: "Atomic Commits", startSec: 148, endSec: 152 },
+      { text: "Rollback", startSec: 157, endSec: 161 },
     ],
   },
 
@@ -77,9 +99,15 @@ export const TIMELINE: TimelineSegment[] = [
     durationSec: 57,
     faceBubble: "hidden",
     showSubtitles: true,
+    callouts: [
+      { text: "CI/CD Pipeline", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
     keywords: [
       { text: "CI/CD Pipeline", startSec: 176, endSec: 180 },
       { text: "Auto Checks", startSec: 185, endSec: 189 },
+      { text: "Builds Image", startSec: 202, endSec: 206 },
+      { text: "Tests Run", startSec: 207, endSec: 211 },
+      { text: "Tests Pass → Push", startSec: 211, endSec: 215 },
     ],
   },
 
@@ -91,9 +119,14 @@ export const TIMELINE: TimelineSegment[] = [
     durationSec: 25,
     faceBubble: "hidden",
     showSubtitles: true,
+    callouts: [
+      { text: "Testing", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
     keywords: [
       { text: "Unit Tests", startSec: 222, endSec: 226 },
+      { text: "Integration", startSec: 225, endSec: 229 },
       { text: "End-to-End", startSec: 228, endSec: 232 },
+      { text: "Automated", startSec: 231, endSec: 235 },
     ],
   },
 
@@ -105,9 +138,15 @@ export const TIMELINE: TimelineSegment[] = [
     durationSec: 47,
     faceBubble: "hidden",
     showSubtitles: true,
+    callouts: [
+      { text: "Deployment", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
     keywords: [
       { text: "Vercel", startSec: 258, endSec: 262 },
       { text: "Render & Railway", startSec: 264, endSec: 268 },
+      { text: "Always Online", startSec: 273, endSec: 277 },
+      { text: "Auto-Scaled", startSec: 275, endSec: 279 },
+      { text: "Own Server", startSec: 285, endSec: 289 },
     ],
   },
 
@@ -119,10 +158,16 @@ export const TIMELINE: TimelineSegment[] = [
     durationSec: 62,
     faceBubble: "hidden",
     showSubtitles: true,
+    callouts: [
+      { text: "Debugging Agents", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
     keywords: [
       { text: "Debugging", startSec: 294, endSec: 298 },
+      { text: "Automate Tests", startSec: 305, endSec: 309 },
       { text: "Happy Path", startSec: 318, endSec: 322 },
       { text: "Unhappy Path", startSec: 324, endSec: 328 },
+      { text: "Browser Access", startSec: 334, endSec: 338 },
+      { text: "Full User Power", startSec: 342, endSec: 346 },
     ],
   },
 
@@ -134,9 +179,15 @@ export const TIMELINE: TimelineSegment[] = [
     durationSec: 44,
     faceBubble: "hidden",
     showSubtitles: true,
+    callouts: [
+      { text: "Docs & Issues", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
     keywords: [
-      { text: "README", startSec: 376, endSec: 380 },
+      { text: "README", startSec: 358, endSec: 362 },
+      { text: "MD Files", startSec: 362, endSec: 366 },
+      { text: "Markdown", startSec: 364, endSec: 368 },
       { text: "GitHub Issues", startSec: 383, endSec: 387 },
+      { text: "Tickets", startSec: 387, endSec: 391 },
     ],
   },
 
@@ -148,9 +199,17 @@ export const TIMELINE: TimelineSegment[] = [
     durationSec: 95,
     faceBubble: "bottom-left",
     showSubtitles: true,
+    callouts: [
+      { text: "AI Superpower", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
     keywords: [
+      { text: "AI Superpower", startSec: 396, endSec: 400 },
+      { text: "Ask AI Anything", startSec: 406, endSec: 410 },
+      { text: "Remove Yourself", startSec: 428, endSec: 432 },
       { text: "Quality Loops", startSec: 443, endSec: 447 },
       { text: "Autonomous Agents", startSec: 454, endSec: 458 },
+      { text: "Coding + Review", startSec: 476, endSec: 480 },
+      { text: "10/10 Happy", startSec: 479, endSec: 483 },
       { text: "Score 0-10", startSec: 491, endSec: 495 },
     ],
   },
@@ -164,5 +223,8 @@ export const TIMELINE: TimelineSegment[] = [
     faceBubble: "hidden",
     showSubtitles: true,
     showEndCard: true,
+    callouts: [
+      { text: "Wrap Up", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
   },
 ];
