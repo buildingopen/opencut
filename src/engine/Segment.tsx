@@ -24,6 +24,9 @@ import { KeywordOverlay } from "./KeywordOverlay";
 import { TitleCard } from "./TitleCard";
 import { EndCard } from "./EndCard";
 import { NotificationBanner } from "./NotificationBanner";
+import { InlinePanelOverlay } from "./InlinePanelOverlay";
+import { SplitScreenBackground } from "./SplitScreenBackground";
+import { AnimatedDiagram } from "./AnimatedDiagram";
 import type {
   TimelineSegment,
   VideoConfig,
@@ -393,6 +396,30 @@ export const Segment: React.FC<SegmentProps> = ({
           </div>
         )}
 
+      {/* Split-screen background */}
+      {segment.type === "split-screen" && segment.splitContent && (
+        <SplitScreenBackground
+          facecamStartSec={segment.facecamStartSec}
+          facecamAsset={facecamAsset}
+          playbackRate={playbackRate}
+          splitContent={segment.splitContent}
+          width={width}
+          height={height}
+        />
+      )}
+
+      {/* Animated diagram background */}
+      {segment.type === "animated-diagram" && segment.diagramSteps && (
+        <AnimatedDiagram
+          title={segment.diagramTitle ?? ""}
+          steps={segment.diagramSteps}
+          width={width}
+          height={height}
+          rawDurationSec={segment.durationSec}
+          playbackRate={playbackRate}
+        />
+      )}
+
       {/* Notification banners */}
       {hasNotifications && segment.notifications && (
         <NotificationBanner
@@ -441,6 +468,15 @@ export const Segment: React.FC<SegmentProps> = ({
           segmentRawStartSec={segment.facecamStartSec}
           playbackRate={playbackRate}
           style={keywordStyle}
+        />
+      )}
+
+      {/* Inline concept panels */}
+      {segment.inlinePanels && segment.inlinePanels.length > 0 && (
+        <InlinePanelOverlay
+          panels={segment.inlinePanels}
+          segmentRawStartSec={segment.facecamStartSec}
+          playbackRate={playbackRate}
         />
       )}
 

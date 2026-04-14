@@ -93,6 +93,8 @@ export type SegmentType =
   | "slides"
   | "screen-static"
   | "screen-video"
+  | "split-screen"
+  | "animated-diagram"
   | "cta";
 
 /**
@@ -152,6 +154,15 @@ export interface TimelineSegment {
     /** Static background image to use instead of screenVideo. */
     backgroundImage?: string;
   };
+
+  /** Inline concept panels overlaid on the face (any segment type). */
+  inlinePanels?: InlinePanel[];
+  /** Split-screen configuration. Required when type = "split-screen". */
+  splitContent?: SplitContent;
+  /** Steps for an animated diagram. Required when type = "animated-diagram". */
+  diagramSteps?: DiagramStep[];
+  /** Title for the animated diagram. */
+  diagramTitle?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -222,4 +233,70 @@ export interface EndCardStyle extends CardStyle {
   ctaText?: string;
   url?: string;
   urlFontFamily?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Inline panel overlay
+// ---------------------------------------------------------------------------
+
+/** An inline concept-explanation panel overlaid on the face without cutting away. */
+export interface InlinePanel {
+  /** Short title, e.g. "What is CI/CD?" */
+  title: string;
+  /** Bullet points or numbered steps. */
+  items: string[];
+  /** Layout of items. Default "bullets". */
+  itemStyle?: "bullets" | "numbered";
+  /** Start time in raw seconds (pre-speedup). */
+  startSec: number;
+  /** End time in raw seconds (pre-speedup). */
+  endSec: number;
+  /** Panel position on screen. Default "bottom". */
+  position?: "bottom" | "bottom-right" | "center-right";
+  /** Accent color for title bar (CSS color string). Default "#4ade80" (green). */
+  accentColor?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Split-screen content
+// ---------------------------------------------------------------------------
+
+/** Content shown on the non-face side of a split-screen segment. */
+export interface SplitContent {
+  /** Which side the face occupies (content goes on the other side). */
+  faceSide: "left" | "right";
+  contentType: "image" | "bullets" | "code";
+  /** Path relative to public/ for contentType "image". */
+  imagePath?: string;
+  /** For contentType "bullets". */
+  bullets?: {
+    title: string;
+    items: string[];
+    itemStyle?: "bullets" | "numbered";
+  };
+  /** For contentType "code": syntax-highlighted lines. */
+  code?: {
+    language: string;
+    lines: string[];
+  };
+  /** Background color of the content panel. Default "#0d1117". */
+  bgColor?: string;
+  /** Accent color. Default "#4ade80". */
+  accentColor?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Animated diagram step
+// ---------------------------------------------------------------------------
+
+/** A single step in an animated flow diagram. */
+export interface DiagramStep {
+  /** Short label for this step. */
+  label: string;
+  /** Optional detail line below the label. */
+  detail?: string;
+  /** Optional emoji or single character icon. */
+  icon?: string;
+  /** Accent color for this step's box. Default "#1a7a4a". */
+  color?: string;
 }

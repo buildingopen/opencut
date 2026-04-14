@@ -15,6 +15,9 @@ export { KeywordOverlay } from "./KeywordOverlay";
 export { TitleCard } from "./TitleCard";
 export { EndCard } from "./EndCard";
 export { NotificationBanner } from "./NotificationBanner";
+export { InlinePanelOverlay } from "./InlinePanelOverlay";
+export { SplitScreenBackground } from "./SplitScreenBackground";
+export { AnimatedDiagram } from "./AnimatedDiagram";
 
 // Types
 export type {
@@ -29,6 +32,10 @@ export type {
   NotificationStyle,
   Word,
   SubtitleSegment,
+  // Phase 2 types
+  InlinePanel,
+  SplitContent,
+  DiagramStep,
   // Styles
   SubtitleStyle,
   KeywordStyle,
