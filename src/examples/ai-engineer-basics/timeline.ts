@@ -1,23 +1,20 @@
 /**
- * AI Engineer Basics video timeline.
+ * AI Engineer Basics — visual-rich timeline.
  *
- * Refined from Whisper transcript (176 segments, 523.5s, 1348 words).
- * Topics identified from actual transcript content.
+ * Every facecam-full segment is ≤18s raw. Real GitHub screenshots break
+ * up long sections so there's a visual cut every 10-18 seconds.
  *
- * ASSET MANIFEST (required in public/):
- *   ai-engineer-basics.mov  - Federico talking (primary footage)
+ * A/V SYNC: facecamStartSec of segment N = sum of durationSec of segments 0..N-1.
+ * Total duration: 523.5s
  *
- * Source video: facecam, raw duration ~523.5s at 1x speed.
- * At playbackRate 1.2, rendered duration ≈ 436s (~7.3min).
- *
- * A/V SYNC: each segment's facecamStartSec must equal the cumulative
- * sum of all preceding durationSec values. Any mismatch causes
- * audio/video drift from that point onward.
+ * B-ROLL IMAGES (in public/ae-slides/broll/):
+ *   github-repo.png, github-commits.png, github-branches.png,
+ *   github-actions.png, github-issues.png
  */
 import type { TimelineSegment } from "../../engine";
 
 export const TIMELINE: TimelineSegment[] = [
-  // 0-7s: Hook — "What do you need to go from VibeCoder to AI engineer?"
+  // ─── HOOK (0–7s) ────────────────────────────────────────────────────────
   {
     id: "s01-hook",
     type: "facecam-full",
@@ -29,18 +26,15 @@ export const TIMELINE: TimelineSegment[] = [
     callouts: [
       { text: "VibeCoder → AI Engineer", position: "center", delaySec: 0, durationSec: 1.5 },
     ],
-    keywords: [
-      // startSec 2 (not 1) so it doesn't overlap with callout (0–1.5s raw)
-      { text: "VibeCoder", startSec: 2, endSec: 6 },
-    ],
+    keywords: [{ text: "VibeCoder", startSec: 2, endSec: 6 }],
   },
 
-  // 7-36s: The Problem — chaos when things break, no visibility
+  // ─── THE PROBLEM (7–36s) ────────────────────────────────────────────────
   {
-    id: "s02-the-problem",
+    id: "s02-problem-a",
     type: "facecam-full",
     facecamStartSec: 7,
-    durationSec: 29,
+    durationSec: 18,
     faceBubble: "hidden",
     showSubtitles: true,
     callouts: [
@@ -49,12 +43,22 @@ export const TIMELINE: TimelineSegment[] = [
     keywords: [
       { text: "Chaos", startSec: 13, endSec: 17 },
       { text: "Nothing Works", startSec: 19, endSec: 23 },
+    ],
+  },
+  {
+    id: "s02-problem-b",
+    type: "facecam-full",
+    facecamStartSec: 25,
+    durationSec: 11,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [
       { text: "Can't Go Back", startSec: 25, endSec: 29 },
       { text: "Everything Breaks", startSec: 30, endSec: 34 },
     ],
   },
 
-  // 36-46s: GitHub slide (screen-static with facecam PiP)
+  // ─── GITHUB SLIDE (36–46s) ──────────────────────────────────────────────
   {
     id: "s03-github-slide",
     type: "screen-static",
@@ -68,21 +72,17 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 46-105s: GitHub — version control, fix the chaos
+  // ─── GITHUB (46–105s) ───────────────────────────────────────────────────
   {
-    id: "s03-github",
+    id: "s03-github-a",
     type: "facecam-full",
     facecamStartSec: 46,
-    durationSec: 59,
+    durationSec: 15,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      // "GitHub" keyword removed — outside window (was startSec:40, window starts at 46)
       { text: "Version Control", startSec: 47, endSec: 51 },
       { text: "Every Change Saved", startSec: 53, endSec: 57 },
-      { text: "Branches", startSec: 63, endSec: 67 },
-      { text: "Staging Preview", startSec: 73, endSec: 77 },
-      { text: "Preview Mode", startSec: 92, endSec: 96 },
     ],
     inlinePanels: [
       {
@@ -94,9 +94,32 @@ export const TIMELINE: TimelineSegment[] = [
           "Merge only when feature is complete",
         ],
         itemStyle: "bullets",
-        startSec: 61,
-        endSec: 68,
+        startSec: 53,
+        endSec: 61,
       },
+    ],
+  },
+  {
+    id: "s03-broll-repo",
+    type: "screen-static",
+    facecamStartSec: 61,
+    durationSec: 9,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/broll/github-repo.png",
+  },
+  {
+    id: "s03-github-b",
+    type: "facecam-full",
+    facecamStartSec: 70,
+    durationSec: 18,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [
+      { text: "Branches", startSec: 71, endSec: 75 },
+      { text: "Staging Preview", startSec: 73, endSec: 77 },
+    ],
+    inlinePanels: [
       {
         title: "The Staging Pipeline",
         items: [
@@ -106,16 +129,34 @@ export const TIMELINE: TimelineSegment[] = [
           "Merge to production once confirmed",
         ],
         itemStyle: "numbered",
-        startSec: 77,
-        endSec: 85,
+        startSec: 80,
+        endSec: 88,
         position: "bottom-right",
       },
     ],
   },
-
-  // 105-115s: Branches & PRs slide (screen-static with facecam PiP)
   {
-    id: "s04-branches-prs-slide",
+    id: "s03-broll-commits",
+    type: "screen-static",
+    facecamStartSec: 88,
+    durationSec: 9,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/broll/github-commits.png",
+  },
+  {
+    id: "s03-github-c",
+    type: "facecam-full",
+    facecamStartSec: 97,
+    durationSec: 8,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [{ text: "Preview Mode", startSec: 97, endSec: 101 }],
+  },
+
+  // ─── BRANCHES SLIDE (105–115s) ──────────────────────────────────────────
+  {
+    id: "s04-branches-slide",
     type: "screen-static",
     facecamStartSec: 105,
     durationSec: 10,
@@ -127,23 +168,38 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 115-164s: Branches & PRs — stop breaking working code
-  // durationSec 49 (not 50) so next slide starts exactly at facecamStartSec 164
+  // ─── BRANCHES & PRs (115–164s) ──────────────────────────────────────────
   {
-    id: "s04-branches-prs",
+    id: "s04-branches-a",
     type: "facecam-full",
     facecamStartSec: 115,
-    durationSec: 49,
+    durationSec: 14,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      // Shifted into window (was 107, 109 — both outside 115-164)
       { text: "Branches", startSec: 117, endSec: 121 },
       { text: "Merge Conflicts", startSec: 122, endSec: 126 },
-      { text: "Pull Requests", startSec: 128, endSec: 132 },
-      { text: "Feature Branch", startSec: 134, endSec: 138 },
-      { text: "Atomic Commits", startSec: 148, endSec: 152 },
-      { text: "Rollback", startSec: 157, endSec: 161 },
+    ],
+  },
+  {
+    id: "s04-broll-branches",
+    type: "screen-static",
+    facecamStartSec: 129,
+    durationSec: 9,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/broll/github-branches.png",
+  },
+  {
+    id: "s04-branches-b",
+    type: "facecam-full",
+    facecamStartSec: 138,
+    durationSec: 15,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [
+      { text: "Pull Requests", startSec: 138, endSec: 142 },
+      { text: "Feature Branch", startSec: 143, endSec: 147 },
     ],
     inlinePanels: [
       {
@@ -155,26 +211,47 @@ export const TIMELINE: TimelineSegment[] = [
           "Acts as a quality gate before production",
         ],
         itemStyle: "bullets",
-        startSec: 123,
-        endSec: 130,
+        startSec: 139,
+        endSec: 147,
       },
+    ],
+  },
+  {
+    id: "s04-broll-issues",
+    type: "screen-static",
+    facecamStartSec: 153,
+    durationSec: 7,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/broll/github-issues.png",
+  },
+  {
+    id: "s04-branches-c",
+    type: "facecam-full",
+    facecamStartSec: 160,
+    durationSec: 4,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [
+      { text: "Atomic Commits", startSec: 160, endSec: 164 },
+    ],
+    inlinePanels: [
       {
         title: "Why Use Atomic Commits?",
         items: [
           "One single logical change per commit",
           "Easier to pin down which commit broke things",
           "Simple to revert without losing unrelated work",
-          "Creates a readable, searchable project history",
         ],
         itemStyle: "bullets",
-        startSec: 145,
-        endSec: 152,
+        startSec: 160,
+        endSec: 164,
         position: "bottom-right",
       },
     ],
   },
 
-  // 164-174s: CI/CD slide (screen-static with facecam PiP)
+  // ─── CI/CD SLIDE (164–174s) ─────────────────────────────────────────────
   {
     id: "s05-cicd-slide",
     type: "screen-static",
@@ -188,21 +265,17 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 174-220s: CI/CD Pipelines — prevent regressions
-  // durationSec 46 (not 47) so next slide starts exactly at facecamStartSec 220
+  // ─── CI/CD (174–220s) ───────────────────────────────────────────────────
   {
-    id: "s05-cicd",
+    id: "s05-cicd-a",
     type: "facecam-full",
     facecamStartSec: 174,
-    durationSec: 46,
+    durationSec: 18,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
       { text: "CI/CD Pipeline", startSec: 176, endSec: 180 },
       { text: "Auto Checks", startSec: 185, endSec: 189 },
-      { text: "Builds Image", startSec: 202, endSec: 206 },
-      { text: "Tests Run", startSec: 207, endSec: 211 },
-      { text: "Tests Pass → Push", startSec: 211, endSec: 215 },
     ],
     inlinePanels: [
       {
@@ -219,10 +292,35 @@ export const TIMELINE: TimelineSegment[] = [
       },
     ],
   },
-
-  // 220-228s: Testing slide (screen-static with facecam PiP)
   {
-    id: "s06-testing-types-slide",
+    id: "s05-broll-actions",
+    type: "screen-static",
+    facecamStartSec: 192,
+    durationSec: 10,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/broll/github-actions.png",
+    callouts: [
+      { text: "GitHub Actions", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
+  },
+  {
+    id: "s05-cicd-b",
+    type: "facecam-full",
+    facecamStartSec: 202,
+    durationSec: 18,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [
+      { text: "Builds Image", startSec: 202, endSec: 206 },
+      { text: "Tests Run", startSec: 207, endSec: 211 },
+      { text: "Tests Pass → Push", startSec: 211, endSec: 215 },
+    ],
+  },
+
+  // ─── TESTING SLIDE (220–228s) ───────────────────────────────────────────
+  {
+    id: "s06-testing-slide",
     type: "screen-static",
     facecamStartSec: 220,
     durationSec: 8,
@@ -234,17 +332,15 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 228-244s: Testing Types — unit, integration, end-to-end
-  // durationSec 16 (not 17) so next slide starts exactly at facecamStartSec 244
+  // ─── TESTING (228–244s) ─────────────────────────────────────────────────
   {
-    id: "s06-testing-types",
+    id: "s06-testing",
     type: "facecam-full",
     facecamStartSec: 228,
     durationSec: 16,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      // Shifted into window (was 222, 225 — both outside 228-244); 3 keywords fit cleanly
       { text: "Unit Tests", startSec: 229, endSec: 233 },
       { text: "Integration", startSec: 234, endSec: 238 },
       { text: "End-to-End", startSec: 239, endSec: 243 },
@@ -265,9 +361,9 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 244-254s: Deployment slide (screen-static with facecam PiP)
+  // ─── DEPLOYMENT SLIDE (244–254s) ────────────────────────────────────────
   {
-    id: "s07-deployment-slide",
+    id: "s07-deploy-slide",
     type: "screen-static",
     facecamStartSec: 244,
     durationSec: 10,
@@ -279,20 +375,17 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 254-291s: Deployment — Vercel, Render, Railway
+  // ─── DEPLOYMENT (254–291s) ──────────────────────────────────────────────
   {
-    id: "s07-deployment",
+    id: "s07-deploy-a",
     type: "facecam-full",
     facecamStartSec: 254,
-    durationSec: 37,
+    durationSec: 15,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
       { text: "Vercel", startSec: 258, endSec: 262 },
       { text: "Render & Railway", startSec: 264, endSec: 268 },
-      { text: "Always Online", startSec: 273, endSec: 277 },
-      { text: "Auto-Scaled", startSec: 275, endSec: 279 },
-      { text: "Own Server", startSec: 285, endSec: 289 },
     ],
     inlinePanels: [
       {
@@ -310,10 +403,32 @@ export const TIMELINE: TimelineSegment[] = [
       },
     ],
   },
-
-  // 291-301s: Debugging Agents slide (screen-static with facecam PiP)
   {
-    id: "s08-debugging-agents-slide",
+    id: "s07-broll-repo",
+    type: "screen-static",
+    facecamStartSec: 269,
+    durationSec: 8,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/broll/github-repo.png",
+  },
+  {
+    id: "s07-deploy-b",
+    type: "facecam-full",
+    facecamStartSec: 277,
+    durationSec: 14,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [
+      { text: "Always Online", startSec: 277, endSec: 281 },
+      { text: "Auto-Scaled", startSec: 281, endSec: 285 },
+      { text: "Own Server", startSec: 285, endSec: 289 },
+    ],
+  },
+
+  // ─── DEBUGGING SLIDE (291–301s) ─────────────────────────────────────────
+  {
+    id: "s08-debug-slide",
     type: "screen-static",
     facecamStartSec: 291,
     durationSec: 10,
@@ -325,28 +440,62 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 301-353s: Debugging & Testing Agents
+  // ─── DEBUGGING (301–353s) ───────────────────────────────────────────────
   {
-    id: "s08-debugging-agents",
+    id: "s08-debug-a",
     type: "facecam-full",
     facecamStartSec: 301,
-    durationSec: 52,
+    durationSec: 17,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      // Shifted into window (was 294 — outside 301-353)
       { text: "Debugging", startSec: 302, endSec: 306 },
       { text: "Automate Tests", startSec: 308, endSec: 312 },
-      { text: "Happy Path", startSec: 318, endSec: 322 },
-      { text: "Unhappy Path", startSec: 324, endSec: 328 },
-      { text: "Browser Access", startSec: 334, endSec: 338 },
-      { text: "Full User Power", startSec: 342, endSec: 346 },
     ],
   },
-
-  // 353-361s: Docs & Issues slide (screen-static with facecam PiP)
   {
-    id: "s09-docs-issues-slide",
+    id: "s08-broll-actions",
+    type: "screen-static",
+    facecamStartSec: 318,
+    durationSec: 8,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/broll/github-actions.png",
+  },
+  {
+    id: "s08-debug-b",
+    type: "facecam-full",
+    facecamStartSec: 326,
+    durationSec: 18,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [
+      { text: "Happy Path", startSec: 326, endSec: 330 },
+      { text: "Unhappy Path", startSec: 331, endSec: 335 },
+    ],
+  },
+  {
+    id: "s08-broll-commits",
+    type: "screen-static",
+    facecamStartSec: 344,
+    durationSec: 8,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/broll/github-commits.png",
+  },
+  {
+    id: "s08-debug-c",
+    type: "facecam-full",
+    facecamStartSec: 352,
+    durationSec: 1,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [],
+  },
+
+  // ─── DOCS SLIDE (353–361s) ──────────────────────────────────────────────
+  {
+    id: "s09-docs-slide",
     type: "screen-static",
     facecamStartSec: 353,
     durationSec: 8,
@@ -358,22 +507,41 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 361-396s: Docs & GitHub Issues — README, MD files, issue tracking
-  // durationSec 35 (not 36) so next slide starts exactly at facecamStartSec 396
+  // ─── DOCS (361–396s) ────────────────────────────────────────────────────
   {
-    id: "s09-docs-issues",
+    id: "s09-docs-a",
     type: "facecam-full",
     facecamStartSec: 361,
-    durationSec: 35,
+    durationSec: 16,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      // Shifted into window (was 358 — outside 361-396); spaced to avoid overlap
       { text: "README", startSec: 363, endSec: 367 },
       { text: "MD Files", startSec: 369, endSec: 373 },
-      { text: "Markdown", startSec: 375, endSec: 379 },
-      { text: "GitHub Issues", startSec: 383, endSec: 387 },
-      { text: "Tickets", startSec: 388, endSec: 392 },
+    ],
+  },
+  {
+    id: "s09-broll-issues",
+    type: "screen-static",
+    facecamStartSec: 377,
+    durationSec: 8,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/broll/github-issues.png",
+    callouts: [
+      { text: "GitHub Issues", position: "center", delaySec: 0, durationSec: 1.5 },
+    ],
+  },
+  {
+    id: "s09-docs-b",
+    type: "facecam-full",
+    facecamStartSec: 385,
+    durationSec: 11,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [
+      { text: "GitHub Issues", startSec: 385, endSec: 389 },
+      { text: "Tickets", startSec: 389, endSec: 393 },
     ],
     inlinePanels: [
       {
@@ -385,15 +553,15 @@ export const TIMELINE: TimelineSegment[] = [
           "CLAUDE.md: instructions for AI agents on the repo",
         ],
         itemStyle: "bullets",
-        startSec: 374,
-        endSec: 382,
+        startSec: 386,
+        endSec: 394,
       },
     ],
   },
 
-  // 396-408s: AI Superpower slide (screen-static with facecam PiP)
+  // ─── AI SUPERPOWER SLIDE (396–408s) ─────────────────────────────────────
   {
-    id: "s10-ai-superpower-slide",
+    id: "s10-ai-slide",
     type: "screen-static",
     facecamStartSec: 396,
     durationSec: 12,
@@ -405,32 +573,83 @@ export const TIMELINE: TimelineSegment[] = [
     ],
   },
 
-  // 408-490s: AI Superpower — agents, quality loops, autonomous review
-  // FIX 1: faceBubble "hidden" (not "bottom-left") — facecam-full shows face as bg already
-  // durationSec 82 (not 83) so outro starts exactly at facecamStartSec 490
+  // ─── AI SUPERPOWER (408–490s) ───────────────────────────────────────────
   {
-    id: "s10-ai-superpower",
+    id: "s10-ai-a",
     type: "facecam-full",
     facecamStartSec: 408,
-    durationSec: 82,
+    durationSec: 18,
     faceBubble: "hidden",
     showSubtitles: true,
     keywords: [
-      // Shifted into window (was 396, 406 — both outside 408-490)
       { text: "AI Superpower", startSec: 410, endSec: 414 },
       { text: "Ask AI Anything", startSec: 416, endSec: 420 },
-      { text: "Remove Yourself", startSec: 428, endSec: 432 },
+    ],
+  },
+  {
+    id: "s10-broll-1",
+    type: "screen-static",
+    facecamStartSec: 426,
+    durationSec: 8,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/broll/github-repo.png",
+  },
+  {
+    id: "s10-ai-b",
+    type: "facecam-full",
+    facecamStartSec: 434,
+    durationSec: 18,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [
+      { text: "Remove Yourself", startSec: 434, endSec: 438 },
       { text: "Quality Loops", startSec: 443, endSec: 447 },
-      { text: "Autonomous Agents", startSec: 454, endSec: 458 },
+    ],
+  },
+  {
+    id: "s10-broll-2",
+    type: "screen-static",
+    facecamStartSec: 452,
+    durationSec: 8,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/debugging.png",
+  },
+  {
+    id: "s10-ai-c",
+    type: "facecam-full",
+    facecamStartSec: 460,
+    durationSec: 18,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [
+      { text: "Autonomous Agents", startSec: 460, endSec: 464 },
       { text: "Coding + Review", startSec: 476, endSec: 480 },
-      // Shifted to avoid overlap with Coding+Review (was 479-483)
-      { text: "10/10 Happy", startSec: 481, endSec: 485 },
-      // Shifted into window (was 491-495, outside 408-490)
-      { text: "Score 0-10", startSec: 486, endSec: 490 },
+    ],
+  },
+  {
+    id: "s10-broll-3",
+    type: "screen-static",
+    facecamStartSec: 478,
+    durationSec: 8,
+    faceBubble: "bottom-left",
+    showSubtitles: true,
+    screenImage: "ae-slides/ai-superpower.png",
+  },
+  {
+    id: "s10-ai-d",
+    type: "facecam-full",
+    facecamStartSec: 486,
+    durationSec: 4,
+    faceBubble: "hidden",
+    showSubtitles: true,
+    keywords: [
+      { text: "10/10 Happy", startSec: 486, endSec: 490 },
     ],
   },
 
-  // 490-523.5s: Outro — summary and sign-off
+  // ─── OUTRO (490–523.5s) ─────────────────────────────────────────────────
   {
     id: "s11-outro",
     type: "facecam-full",
