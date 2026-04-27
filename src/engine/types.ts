@@ -84,6 +84,32 @@ export interface SubtitleSegment {
 }
 
 // ---------------------------------------------------------------------------
+// Background effects
+// ---------------------------------------------------------------------------
+
+/** Generative background effect types. */
+export type BackgroundEffectType =
+  | "orbs"
+  | "particles"
+  | "grid"
+  | "waves"
+  | "dots"
+  | "vignette";
+
+/** Configuration for a generative background effect on a segment. */
+export interface BackgroundEffectConfig {
+  type: BackgroundEffectType;
+  /** Primary accent color (hex). Default "#4ade80". */
+  accentColor?: string;
+  /** Opacity/intensity multiplier (0-1). Default 0.5. */
+  intensity?: number;
+  /** For "orbs": number of orbs (1-3). Default 1. */
+  orbCount?: number;
+  /** For "particles": number of particles. Default 40. */
+  particleCount?: number;
+}
+
+// ---------------------------------------------------------------------------
 // Timeline segment
 // ---------------------------------------------------------------------------
 
@@ -163,6 +189,9 @@ export interface TimelineSegment {
   diagramSteps?: DiagramStep[];
   /** Title for the animated diagram. */
   diagramTitle?: string;
+
+  /** Optional generative background effect layered behind the segment. */
+  backgroundEffect?: BackgroundEffectConfig;
 }
 
 // ---------------------------------------------------------------------------

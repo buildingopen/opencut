@@ -27,6 +27,7 @@ import { NotificationBanner } from "./NotificationBanner";
 import { InlinePanelOverlay } from "./InlinePanelOverlay";
 import { SplitScreenBackground } from "./SplitScreenBackground";
 import { AnimatedDiagram } from "./AnimatedDiagram";
+import { BackgroundEffects } from "./BackgroundEffects";
 import type {
   TimelineSegment,
   VideoConfig,
@@ -418,6 +419,11 @@ export const Segment: React.FC<SegmentProps> = ({
           rawDurationSec={segment.durationSec}
           playbackRate={playbackRate}
         />
+      )}
+
+      {/* Background effects (orbs, particles, grid, etc.) */}
+      {segment.backgroundEffect && (
+        <BackgroundEffects config={segment.backgroundEffect} />
       )}
 
       {/* Notification banners */}
