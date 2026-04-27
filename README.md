@@ -6,6 +6,14 @@ Open-source, AI-powered video production engine built on Remotion. Define a time
 
 Built for product demo videos, LinkedIn content, and social media clips: word-level captions/subtitles, face-cam bubbles, keyword overlays, notification banners, title/end cards.
 
+## What's new
+
+- **Generative background effects** — Layer animated orbs, particles, grid, waves, dots, or vignette behind any segment without extra assets.
+- **TypingText component** — Character-by-character typewriter animation with blinking cursor, configurable speed, and accent-color glow.
+- **CrossfadeScene wrapper** — Reusable asymmetric fade-in / fade-out scene transition with cubic easing.
+- **Music sync / beat alignment** — Lock scene transitions to musical tempo with `beatsToFrames`, `barsToFrames`, and synced volume curves.
+- **Animation utilities** — Pure helper library for particles, wave motion, breathing effects, stagger reveals, lerp colors, Ken Burns presets, and audio-reactivity simulation.
+
 ## Features
 
 - **AI transcription via Whisper** — word-level captions and subtitles with active-word highlighting, powered by OpenAI Whisper
@@ -71,9 +79,15 @@ src/
     TitleCard.tsx           # Full-screen title card
     EndCard.tsx             # Full-screen end card with CTA
     NotificationBanner.tsx  # Slide-in notification popups
+    BackgroundEffects.tsx   # Generative background effects (orbs, particles, grid, waves, dots, vignette)
+    CrossfadeScene.tsx      # Reusable fade-in/fade-out scene wrapper
+    TypingText.tsx          # Typewriter text animation with cursor
+    animations.ts           # Pure animation utilities (particles, easing, Ken Burns, etc.)
+    MusicSync.ts            # Beat-to-frame math and synced volume curves
     index.ts                # Public API exports
   examples/
     openslides/             # Example: OpenSlides product demo
+    format-demo/            # Example: background effects, typing text, and multi-format compositions
 ```
 
 ## Creating a new video
@@ -111,6 +125,12 @@ export const TIMELINE: TimelineSegment[] = [
     faceBubble: "hidden",
     showSubtitles: true,
     showTitleCard: true,
+    backgroundEffect: {
+      type: "orbs",
+      accentColor: "#3b82f6",
+      intensity: 0.5,
+      orbCount: 2,
+    },
   },
   {
     id: "demo",
@@ -123,6 +143,11 @@ export const TIMELINE: TimelineSegment[] = [
     keywords: [
       { text: "Key Feature", startSec: 12, endSec: 16 },
     ],
+    backgroundEffect: {
+      type: "grid",
+      accentColor: "#a78bfa",
+      intensity: 0.4,
+    },
   },
 ];
 ```
@@ -182,8 +207,53 @@ npx remotion render src/examples/your-project/index.ts MyVideo out/my-video.mp4
 | `TitleCard` | Full-screen title overlay with configurable text and colors. |
 | `EndCard` | Full-screen end card with CTA button and URL pill. |
 | `NotificationBanner` | macOS-style slide-in notifications. Presets: WhatsApp (green), iMessage (blue), generic (gray). |
+| `BackgroundEffects` | Generative SVG backgrounds: `orbs`, `particles`, `grid`, `waves`, `dots`, `vignette`. |
+| `TypingText` | Typewriter animation with optional blinking cursor, speed control, and accent glow. |
+| `CrossfadeScene` | Wraps a scene in `<AbsoluteFill>` with asymmetric fade-in / fade-out opacity. |
 
 All style props (`SubtitleStyle`, `KeywordStyle`, `CardStyle`, `EndCardStyle`) are optional overrides on `VideoComposition`.
+
+## Animation utilities
+
+Import pure helpers from `src/engine/animations`:
+
+- `generateParticles(count, seed)` — seeded, deterministic particle array
+- `updateParticlePosition(particle, frame, bounds)` — frame-based position with wrapping
+- `waveMotion(frame, frequency, amplitude, phase)` — sine-wave motion
+- `breathe(frame, minScale, maxScale, speed)` — pulsing scale between two values
+- `lerpColor(color1, color2, t)` — linear interpolation between hex colors
+- `stagger(index, totalItems, totalDurationSeconds, frame, fps)` — 0-1 reveal progress for list items
+- `typewriter(text, frame, fps, charsPerSecond)` — substring for frame-accurate typing
+- `animatedCounter(from, to, progress, decimals)` — number interpolation with `easeOutExpo`
+- `getKenBurnsTransform(preset, progress)` — cinematic scale/translate for background footage
+- `simulateAudioReactivity(frame, intensity)` — frame-pulsed 0-1 value for bass-hit simulation
+
+## Music sync
+
+Import beat-aware helpers from `src/engine/MusicSync`:
+
+- `getGridBPM(fps, framesPerBeat)` — derive target BPM from grid settings
+- `getBeatSyncPlaybackRate(sourceBPM, targetBPM)` — playback rate to lock music to tempo
+- `beatsToFrames(beats, bpm, fps)` — exact frame count for N beats
+- `barsToFrames(bars, bpm, fps)` — exact frame count for N bars (4/4)
+- `buildSceneStarts(durations, overlapFrames)` — compute crossfade start frames
+- `getSyncedMusicVolume(frame, totalFrames, baseVolume, fadeInFrames, fadeOutFrames)` — volume curve that fades in at the start and out at the end
+
+## Background effects
+
+Add a `backgroundEffect` field to any `TimelineSegment`:
+
+```ts
+backgroundEffect: {
+  type: "orbs",        // or "particles" | "grid" | "waves" | "dots" | "vignette"
+  accentColor: "#3b82f6",
+  intensity: 0.5,
+  orbCount: 2,         // only for "orbs"
+  particleCount: 40,   // only for "particles"
+}
+```
+
+Effects are rendered as SVG or CSS layers behind the segment content and animate automatically based on the current frame.
 
 ## Rendering on a server
 

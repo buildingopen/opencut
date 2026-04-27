@@ -28,6 +28,11 @@ import { InlinePanelOverlay } from "./InlinePanelOverlay";
 import { SplitScreenBackground } from "./SplitScreenBackground";
 import { AnimatedDiagram } from "./AnimatedDiagram";
 import { BackgroundEffects } from "./BackgroundEffects";
+import { KineticTypography } from "./KineticTypography";
+import { AppMockup } from "./AppMockup";
+import { ComparisonTable } from "./ComparisonTable";
+import { AudioWaveform } from "./AudioWaveform";
+import { VideoBackground } from "./VideoBackground";
 import type {
   TimelineSegment,
   VideoConfig,
@@ -426,6 +431,26 @@ export const Segment: React.FC<SegmentProps> = ({
         <BackgroundEffects config={segment.backgroundEffect} />
       )}
 
+      {/* Video background (B-roll with Ken Burns) */}
+      {segment.type === "video-background" && segment.videoBackground && (
+        <VideoBackground {...segment.videoBackground} />
+      )}
+
+      {/* Kinetic typography scene */}
+      {segment.type === "kinetic-text" && segment.kineticText && (
+        <KineticTypography {...segment.kineticText} />
+      )}
+
+      {/* App mockup scene */}
+      {segment.type === "app-mockup" && segment.appMockup && (
+        <AppMockup {...segment.appMockup} />
+      )}
+
+      {/* Comparison table scene */}
+      {segment.type === "comparison" && segment.comparison && (
+        <ComparisonTable {...segment.comparison} />
+      )}
+
       {/* Notification banners */}
       {hasNotifications && segment.notifications && (
         <NotificationBanner
@@ -484,6 +509,11 @@ export const Segment: React.FC<SegmentProps> = ({
           segmentRawStartSec={segment.facecamStartSec}
           playbackRate={playbackRate}
         />
+      )}
+
+      {/* Audio waveform overlay */}
+      {segment.audioWaveform && (
+        <AudioWaveform {...segment.audioWaveform} />
       )}
 
       {/* Callouts */}

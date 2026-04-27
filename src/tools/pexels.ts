@@ -1,5 +1,6 @@
 import axios from "axios";
 import fs from "fs";
+import path from "path";
 
 export interface PexelsVideo {
   id: number;
@@ -112,12 +113,134 @@ export async function downloadVideo(
     responseType: "stream",
   });
 
+  await fs.promises.mkdir(path.dirname(outputPath), { recursive: true });
+
   await new Promise<void>((resolve, reject) => {
     const writer = fs.createWriteStream(outputPath);
     response.data.pipe(writer);
     writer.on("finish", resolve);
     writer.on("error", reject);
+    response.data.on("error", reject);
   });
 
   return outputPath;
+}
+
+// ---------------------------------------------------------------------------
+// Stock B-roll helpers
+// ---------------------------------------------------------------------------
+
+export interface BrollResult {
+  /** Path relative to public/ (e.g. "broll/nature-123.mp4"). */
+  publicPath: string;
+  /** Absolute filesystem path. */
+  absolutePath: string;
+  /** Video metadata. */
+  video: PexelsVideo;
+}
+
+/**
+ * Search Pexels for a video clip and download the best match to public/broll/.
+ *
+ * @param query Search term (e.g. "aerial city night")
+ * @param targetDurationSec Desired clip length in seconds
+ * @param projectRoot Absolute path to the project root (where public/ lives)
+ * @returns The downloaded b-roll result
+ */
+export async function fetchBroll(
+  query: string,
+  targetDurationSec: number,
+  projectRoot: string,
+): Promise<BrollResult> {
+  const videos = await searchVideos(query, targetDurationSec);
+  if (videos.length === 0) {
+    throw new Error(`No Pexels videos found for query: "${query}"`);
+  }
+
+  const top = videos[0];
+  const safeName = query
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  const filename = `${safeName}-${top.id}.mp4`;
+  const publicPath = path.join("broll", filename);
+  const absolutePath = path.join(projectRoot, "public", publicPath);
+
+  await downloadVideo(top, absolutePath);
+
+  return {
+    publicPath: publicPath.replace(/\\/g, "/"),
+    absolutePath,
+    video: top,
+  };
+}
+
+/**
+ * Fetch multiple b-roll clips for a timeline.
+ *
+ * @param query Search term
+ * @param count Number of clips to fetch
+ * @param targetDurationSec Desired clip length in seconds
+ * @param projectRoot Absolute path to the project root
+ * @returns Array of downloaded b-roll results
+ */
+export async function fetchBrollBatch(
+  query: string,
+  count: number,
+  targetDurationSec: number,
+  projectRoot: string,
+): Promise<BrollResult[]> {
+  const allVideos = await searchVideos(query, targetDurationSec);
+  if (allVideos.length === 0) {
+    throw new Error(`No Pexels videos found for query: "${query}"`);
+  }
+
+  const results: BrollResult[] = [];
+  const safeName = query
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  for (let i = 0; i < Math.min(count, allVideos.length); i++) {
+    const video = allVideos[i];
+    const filename = `${safeName}-${video.id}.mp4`;
+    const publicPath = path.join("broll", filename);
+    const absolutePath = path.join(projectRoot, "public", publicPath);
+
+    // Skip re-download if already exists
+    if (!fs.existsSync(absolutePath)) {
+      await downloadVideo(video, absolutePath);
+    }
+
+    results.push({
+      publicPath: publicPath.replace(/\\/g, "/"),
+      absolutePath,
+      video,
+    });
+  }
+
+  return results;
+}
+
+/**
+ * Generate a timeline snippet for the fetched b-roll clips.
+ *
+ * Each clip is treated as a facecam-full segment with a VideoBackground.
+ * Adjust segment durations to match your actual voiceover timing.
+ */
+export function buildBrollTimelineSnippet(
+  results: BrollResult[],
+  segmentDurationSec: number = 5,
+): unknown[] {
+  return results.map((r, i) => ({
+    id: `broll-${i + 1}`,
+    type: "facecam-full",
+    facecamStartSec: i * segmentDurationSec,
+    durationSec: segmentDurationSec,
+    faceBubble: "hidden",
+    showSubtitles: false,
+    backgroundEffect: undefined,
+    // To use VideoBackground, add this to your Segment renderer:
+    // videoBackground: { videoUrl: r.publicPath, opacity: 0.4, presetIndex: i }
+  }));
 }

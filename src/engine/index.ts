@@ -21,6 +21,12 @@ export { AnimatedDiagram } from "./AnimatedDiagram";
 export { BackgroundEffects } from "./BackgroundEffects";
 export { CrossfadeScene } from "./CrossfadeScene";
 export { TypingText } from "./TypingText";
+export { KineticTypography } from "./KineticTypography";
+export { AppMockup } from "./AppMockup";
+export { ComparisonTable } from "./ComparisonTable";
+export { AudioWaveform } from "./AudioWaveform";
+export { VideoBackground } from "./VideoBackground";
+export { FormatAdapter, getFormatDimensions } from "./FormatAdapter";
 
 // Types
 export type {

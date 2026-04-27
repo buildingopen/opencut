@@ -121,7 +121,11 @@ export type SegmentType =
   | "screen-video"
   | "split-screen"
   | "animated-diagram"
-  | "cta";
+  | "cta"
+  | "kinetic-text"
+  | "app-mockup"
+  | "comparison"
+  | "video-background";
 
 /**
  * A single segment in the video timeline.
@@ -192,6 +196,52 @@ export interface TimelineSegment {
 
   /** Optional generative background effect layered behind the segment. */
   backgroundEffect?: BackgroundEffectConfig;
+
+  // New scene types (Phase 3)
+  /** Kinetic typography config. Required when type = "kinetic-text". */
+  kineticText?: {
+    text: string;
+    highlightWords?: string[];
+    accentColor?: string;
+  };
+  /** App mockup config. Required when type = "app-mockup". */
+  appMockup?: {
+    title: string;
+    url?: string;
+    tabs?: { name: string; active: boolean }[];
+    rows?: { label: string; value: string; score?: number; intent?: string }[];
+    accentColor?: string;
+  };
+  /** Comparison table config. Required when type = "comparison". */
+  comparison?: {
+    title: string;
+    subtitle?: string;
+    rows: {
+      name: string;
+      logo?: string;
+      features: Record<string, boolean | string>;
+      highlight?: boolean;
+    }[];
+    featureLabels: string[];
+    accentColor?: string;
+  };
+  /** Video background config. Required when type = "video-background". */
+  videoBackground?: {
+    videoUrl: string;
+    opacity?: number;
+    blur?: number;
+    darken?: number;
+    colorTint?: string;
+    presetIndex?: number;
+  };
+  /** Audio waveform overlay (works with any segment type). */
+  audioWaveform?: {
+    barCount?: number;
+    color?: string;
+    height?: number;
+    position?: "bottom" | "top" | "center";
+    intensity?: number;
+  };
 }
 
 // ---------------------------------------------------------------------------
