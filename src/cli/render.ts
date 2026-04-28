@@ -16,7 +16,7 @@ import fs from "fs";
 import path from "path";
 import { loadProject } from "../workflow/VideoProject";
 
-function findProjectFile(input: string): string {
+export function findProjectFile(input: string): string {
   const abs = path.resolve(input);
 
   if (fs.existsSync(abs) && fs.statSync(abs).isFile()) {
@@ -37,7 +37,7 @@ function findProjectFile(input: string): string {
   throw new Error(`No project.json / project.yaml found in ${abs}`);
 }
 
-function findEntryPoint(dir: string): string {
+export function findEntryPoint(dir: string): string {
   const indexTs = path.join(dir, "index.ts");
   if (fs.existsSync(indexTs)) {
     return indexTs;
@@ -45,7 +45,7 @@ function findEntryPoint(dir: string): string {
   throw new Error(`No index.ts entry point found in ${dir}`);
 }
 
-function extractCompositionId(rootTsxPath: string): string {
+export function extractCompositionId(rootTsxPath: string): string {
   const content = fs.readFileSync(rootTsxPath, "utf-8");
   const match = content.match(/id="([^"]+)"/);
   if (!match) {
@@ -54,7 +54,7 @@ function extractCompositionId(rootTsxPath: string): string {
   return match[1];
 }
 
-function parseFramesArg(args: string[]): string | null {
+export function parseFramesArg(args: string[]): string | null {
   // --frames 0-149
   const idx = args.indexOf("--frames");
   if (idx >= 0 && args[idx + 1]) {
@@ -157,4 +157,6 @@ function main() {
   execSync(cmd, { stdio: "inherit" });
 }
 
-main();
+if (require.main === module) {
+  main();
+}

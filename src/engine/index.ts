@@ -56,23 +56,23 @@ export type {
 } from "./types";
 
 // Animation utilities
+export { generateParticles, updateParticlePosition } from "./animation/particles";
+export { easing } from "./animation/easing";
+export { waveMotion, breathe, glitchOffset } from "./animation/motion";
+export { lerpColor } from "./animation/color";
 export {
-  generateParticles,
-  updateParticlePosition,
-  easing,
-  waveMotion,
-  breathe,
-  glitchOffset,
-  lerpColor,
   stagger,
   typewriter,
   animatedCounter,
   drawConnectionProgress,
-  simulateAudioReactivity,
-  springPresets,
+} from "./animation/timing";
+export { simulateAudioReactivity } from "./animation/audio";
+export { springPresets } from "./animation/spring";
+export {
+  KenBurnsPreset,
   KEN_BURNS_PRESETS,
   getKenBurnsTransform,
-} from "./animations";
+} from "./animation/kenburns";
 
 // Music sync utilities
 export {

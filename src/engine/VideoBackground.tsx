@@ -19,7 +19,7 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { KEN_BURNS_PRESETS, getKenBurnsTransform } from "./animations";
+import { KEN_BURNS_PRESETS, getKenBurnsTransform } from "./animation/kenburns";
 
 export interface VideoBackgroundProps {
   /** Local path (relative to public/) or remote URL. */

@@ -54,7 +54,7 @@ function findExportedValue<T>(mod: Record<string, unknown>, predicate: (v: unkno
 // Types (mirrors engine/types.ts so we don't need to import at runtime)
 // ---------------------------------------------------------------------------
 
-interface TimelineSegment {
+export interface TimelineSegment {
   id: string;
   type: string;
   facecamStartSec: number;
@@ -85,7 +85,7 @@ interface TimelineSegment {
   };
 }
 
-interface VideoConfig {
+export interface VideoConfig {
   playbackRate: number;
   fps: number;
   width: number;
@@ -146,7 +146,7 @@ interface ValidationError {
   fatal: boolean;
 }
 
-async function runChecks(
+export async function runChecks(
   timeline: TimelineSegment[],
   config: VideoConfig,
   publicDir: string,
@@ -442,7 +442,9 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error("Unexpected error:", err);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((err) => {
+    console.error("Unexpected error:", err);
+    process.exit(1);
+  });
+}

@@ -14,11 +14,8 @@
 
 import React from "react";
 import { useCurrentFrame } from "remotion";
-import {
-  generateParticles,
-  updateParticlePosition,
-  breathe,
-} from "./animations";
+import { generateParticles, updateParticlePosition } from "./animation/particles";
+import { breathe } from "./animation/motion";
 
 import { type BackgroundEffectConfig } from "./types";
 

@@ -8,7 +8,7 @@
 
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { simulateAudioReactivity } from "./animations";
+import { simulateAudioReactivity } from "./animation/audio";
 
 interface AudioWaveformProps {
   barCount?: number;

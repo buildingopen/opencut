@@ -1,0 +1,7 @@
+{
+  "entryPoints": ["src/engine/index.ts"],
+  "out": "docs/api",
+  "name": "OpenCut Engine API",
+  "includeVersion": true,
+  "excludePrivate": true
+}

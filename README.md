@@ -129,6 +129,9 @@ src/
     openslides/             # Example: OpenSlides product demo
     format-demo/            # Example: background effects, typing text, and multi-format compositions
     ai-engineer-basics/     # Example: long-form educational video
+    floom-launch/           # Example: SaaS product launch video
+    hyperniche-launch/      # Example: competitive comparison with animated diagram
+    opendraft-research/     # Example: educational research video with kinetic typography
 ```
 
 ## Creating a new video
@@ -235,6 +238,20 @@ Place assets in `public/` (create the directory if it doesn't exist — it is gi
 ```bash
 npx remotion render src/examples/your-project/index.ts MyVideo out/my-video.mp4
 ```
+
+## API Documentation
+
+Generate and browse TypeDoc API docs for the engine:
+
+```bash
+# Generate docs (outputs to docs/api/)
+npm run docs:generate
+
+# Serve docs locally on http://localhost:3000
+npm run docs:serve
+```
+
+The generated documentation covers all engine components, TypeScript types, interfaces, and utilities exported from `src/engine/index.ts` — including `VideoComposition`, `Segment`, `FaceBubble`, `SubtitleOverlay`, `KeywordOverlay`, `TitleCard`, `EndCard`, `NotificationBanner`, `BackgroundEffects`, `TypingText`, `CrossfadeScene`, animation helpers, music sync utilities, and their associated configuration types.
 
 ## Engine components
 
