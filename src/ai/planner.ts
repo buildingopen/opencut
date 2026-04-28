@@ -166,6 +166,7 @@ IMPORTANT: Your previous response was not valid JSON. Respond with ONLY the JSON
     } catch (retryErr) {
       throw new Error(
         `Failed to parse Gemini scene plan after retry: ${retryErr instanceof Error ? retryErr.message : String(retryErr)}`,
+        { cause: retryErr },
       );
     }
   }

@@ -66,7 +66,7 @@ describe("plugin segment renderers", () => {
     registerPlugin({
       name: "custom-scene",
       segmentRenderers: {
-        "my-scene": DummySegmentRenderer as React.FC<any>,
+        "my-scene": DummySegmentRenderer as React.FC<import("../plugin").SegmentRendererProps>,
       },
     });
     assert.strictEqual(getSegmentRenderer("my-scene"), DummySegmentRenderer);
@@ -77,13 +77,13 @@ describe("plugin segment renderers", () => {
     registerPlugin({
       name: "first",
       segmentRenderers: {
-        scene: DummySegmentRenderer as React.FC<any>,
+        scene: DummySegmentRenderer as React.FC<import("../plugin").SegmentRendererProps>,
       },
     });
     registerPlugin({
       name: "second",
       segmentRenderers: {
-        scene: SecondRenderer as React.FC<any>,
+        scene: SecondRenderer as React.FC<import("../plugin").SegmentRendererProps>,
       },
     });
     assert.strictEqual(getSegmentRenderer("scene"), DummySegmentRenderer);
@@ -103,7 +103,7 @@ describe("plugin background effect renderers", () => {
     registerPlugin({
       name: "custom-effect",
       backgroundEffectRenderers: {
-        stars: DummyBgEffect as React.FC<any>,
+        stars: DummyBgEffect as React.FC<import("../plugin").BackgroundEffectProps>,
       },
     });
     assert.strictEqual(getBackgroundEffectRenderer("stars"), DummyBgEffect);

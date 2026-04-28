@@ -33,6 +33,7 @@ function parseArgs() {
 function loadTsModule<T>(filePath: string): Record<string, T> {
   // Ensure ts-node is active so .ts files can be required
   try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     require("ts-node/register");
   } catch (err) {
     // ts-node may already be registered when running via npx ts-node
@@ -40,7 +41,9 @@ function loadTsModule<T>(filePath: string): Record<string, T> {
       console.debug("ts-node/register note:", err.message);
     }
   }
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   delete require.cache[require.resolve(filePath)];
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   return require(filePath) as Record<string, T>;
 }
 

@@ -92,7 +92,7 @@ async function runWhisper(videoPath: string, lang: string): Promise<SubtitleSegm
   } catch (err) {
     // Clean up
     try { fs.rmSync(tmpDir, { recursive: true }); } catch { /* ignore */ }
-    throw new Error(`Whisper failed: ${err instanceof Error ? err.message : err}`);
+    throw new Error(`Whisper failed: ${err instanceof Error ? err.message : err}`, { cause: err });
   }
 
   const jsonPath = path.join(tmpDir, `${basename}.json`);

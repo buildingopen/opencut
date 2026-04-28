@@ -34,7 +34,7 @@ export const CrossfadeScene: React.FC<CrossfadeSceneProps> = ({
 }) => {
   const frame = useCurrentFrame();
 
-  let opacity = 1;
+  let opacity: number;
 
   if (fadeIn === 0 && fadeOut === 0) {
     opacity = 1;

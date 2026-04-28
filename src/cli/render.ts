@@ -211,7 +211,7 @@ function main() {
   try {
     const rootTsx = path.join(dir, "Root.tsx");
     compositionId = extractCompositionId(rootTsx);
-  } catch (e) {
+  } catch {
     // Fallback: derive from directory or project name
     const fallbackName = project?.name || path.basename(dir);
     compositionId = fallbackName
