@@ -65,7 +65,9 @@ facecam    Whisper CLI    timeline.ts   validate.ts   out/*.mp4
 | `npx ts-node src/cli/transcribe.ts <video>` | Run Whisper (if installed) or create an empty `subtitles.ts` template. |
 | `npx ts-node src/cli/validate.ts <timeline.ts>` | Check asset paths, segment durations, and timeline contiguity. |
 | `npx ts-node src/cli/render.ts <name>` | Render the full video for a project. |
-| `npx ts-node src/cli/render.ts <name> --preview` | Render only the first 5 seconds for a quick sanity check. |
+| `npx ts-node src/cli/render.ts <name> --preview` | Open Remotion studio for the project. |
+| `npx ts-node src/cli/render.ts <name> --watch` | Watch timeline/config/Root.tsx and auto-re-render on changes. |
+| `npx ts-node src/cli/render.ts <name> --frames 0-149` | Render only a specific frame range. |
 | `npm run typecheck` | Run `tsc --noEmit` across the repo. |
 | `npm run test-render` | Render a 5-second test of the built-in quickstart example. |
 | `npx remotion studio src/examples/<name>/index.ts` | Open the Remotion preview UI in the browser. |
@@ -74,6 +76,9 @@ facecam    Whisper CLI    timeline.ts   validate.ts   out/*.mp4
 
 ## What's new
 
+- **Plugin system** — Register custom segment renderers, background effects, and timeline transforms. See [Plugin API](#plugin-api).
+- **Watch mode** — `render.ts --watch` auto-re-renders when you save timeline.ts, config.ts, or Root.tsx.
+- **Integration tests** — 110 tests including one that bundles and renders an actual frame via Remotion.
 - **Generative background effects** — Layer animated orbs, particles, grid, waves, dots, or vignette behind any segment without extra assets.
 - **TypingText component** — Character-by-character typewriter animation with blinking cursor, configurable speed, and accent-color glow.
 - **CrossfadeScene wrapper** — Reusable asymmetric fade-in / fade-out scene transition with cubic easing.
@@ -129,6 +134,9 @@ src/
     openslides/             # Example: OpenSlides product demo
     format-demo/            # Example: background effects, typing text, and multi-format compositions
     ai-engineer-basics/     # Example: long-form educational video
+    floom-launch/           # Example: SaaS product launch with beat-synced crossfades
+    hyperniche-launch/      # Example: competitive comparison + animated diagram
+    opendraft-research/     # Example: educational research video with kinetic typography
     floom-launch/           # Example: SaaS product launch video
     hyperniche-launch/      # Example: competitive comparison with animated diagram
     opendraft-research/     # Example: educational research video with kinetic typography
@@ -312,6 +320,45 @@ backgroundEffect: {
 ```
 
 Effects are rendered as SVG or CSS layers behind the segment content and animate automatically based on the current frame.
+
+## Plugin API
+
+OpenCut supports plugins for custom segment types, background effects, and timeline transformations.
+
+```ts
+import { registerPlugin } from "./engine";
+
+registerPlugin({
+  name: "my-plugin",
+  segmentRenderers: {
+    "custom-scene": CustomSceneComponent,
+  },
+  backgroundEffectRenderers: {
+    "stars": StarsEffectComponent,
+  },
+  transformTimeline: (timeline) => {
+    // Modify or augment timeline before rendering
+    return timeline;
+  },
+});
+```
+
+### Plugin hooks
+
+| Hook | What it does |
+|------|-------------|
+| `segmentRenderers` | Map segment `type` strings to React components. Rendered instead of built-in segments. |
+| `backgroundEffectRenderers` | Map `backgroundEffect.type` strings to React components. |
+| `transformTimeline` | Receive the full timeline array, return a modified timeline. Applied in registration order. |
+
+### API functions
+
+- `registerPlugin(plugin)` — Register a plugin globally.
+- `unregisterPlugin(name)` — Remove a plugin by name.
+- `clearPlugins()` — Remove all plugins.
+- `getSegmentRenderer(type)` — Look up a custom segment renderer.
+- `getBackgroundEffectRenderer(type)` — Look up a custom background effect.
+- `applyTimelineTransforms(timeline)` — Apply all registered timeline transforms.
 
 ## Rendering on a server
 
