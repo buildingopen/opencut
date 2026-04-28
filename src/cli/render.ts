@@ -3,12 +3,13 @@
  * Smarter render CLI for OpenCut projects.
  *
  * Usage:
- *   npx ts-node src/cli/render.ts <project> [--preview] [--frames 0-149]
+ *   npx ts-node src/cli/render.ts <project> [--preview] [--frames 0-149] [--watch]
  *
  * Examples:
  *   npx ts-node src/cli/render.ts src/my-project/project.json
  *   npx ts-node src/cli/render.ts src/my-project --preview
  *   npx ts-node src/cli/render.ts src/my-project --frames 0-149
+ *   npx ts-node src/cli/render.ts src/my-project --watch
  */
 
 import { execSync } from "child_process";
@@ -70,17 +71,112 @@ export function parseFramesArg(args: string[]): string | null {
   return null;
 }
 
+function buildRenderCommand(
+  entryPoint: string,
+  compositionId: string,
+  outputPath: string,
+  frames: string | null
+): string {
+  let cmd = `timeout 10m npx remotion render ${entryPoint} ${compositionId} ${outputPath}`;
+  if (frames) {
+    cmd += ` --frames=${frames}`;
+  }
+  return cmd;
+}
+
+function runRender(
+  entryPoint: string,
+  compositionId: string,
+  outputPath: string,
+  frames: string | null,
+  projectName?: string
+): void {
+  const cmd = buildRenderCommand(entryPoint, compositionId, outputPath, frames);
+
+  console.log(`\nRendering "${projectName || compositionId}"...`);
+  console.log(`  Entry:   ${entryPoint}`);
+  console.log(`  Comp:    ${compositionId}`);
+  console.log(`  Output:  ${outputPath}`);
+  if (frames) {
+    console.log(`  Frames:  ${frames}`);
+  }
+  console.log(`> ${cmd}`);
+
+  execSync(cmd, { stdio: "inherit" });
+}
+
+function watchProject(
+  dir: string,
+  entryPoint: string,
+  compositionId: string,
+  outputPath: string,
+  frames: string | null,
+  projectName?: string
+): void {
+  const watchFiles = [
+    path.join(dir, "config.ts"),
+    path.join(dir, "timeline.ts"),
+    path.join(dir, "subtitles.ts"),
+    path.join(dir, "Root.tsx"),
+    path.join(dir, "index.ts"),
+  ].filter((f) => fs.existsSync(f));
+
+  console.log(`\n👁  Watch mode enabled. Watching ${watchFiles.length} file(s) for changes:`);
+  watchFiles.forEach((f) => console.log(`   - ${path.relative(process.cwd(), f)}`));
+  console.log(`\nPress Ctrl+C to stop.\n`);
+
+  // Render once immediately
+  try {
+    runRender(entryPoint, compositionId, outputPath, frames, projectName);
+    console.log("\n✅ Initial render complete. Waiting for changes...\n");
+  } catch {
+    console.log("\n⚠️  Initial render failed. Fix errors and save to retry.\n");
+  }
+
+  const watchers = watchFiles.map((file) =>
+    fs.watch(file, (eventType) => {
+      if (eventType === "change") {
+        console.log(`\n🔄 File changed: ${path.relative(process.cwd(), file)}`);
+        try {
+          // Re-extract composition ID in case Root.tsx changed
+          let currentCompId = compositionId;
+          try {
+            const rootTsx = path.join(dir, "Root.tsx");
+            currentCompId = extractCompositionId(rootTsx);
+          } catch {
+            // keep existing
+          }
+          runRender(entryPoint, currentCompId, outputPath, frames, projectName);
+          console.log("\n✅ Render complete. Waiting for changes...\n");
+        } catch {
+          console.log("\n❌ Render failed. Fix errors and save to retry.\n");
+        }
+      }
+    })
+  );
+
+  process.on("SIGINT", () => {
+    console.log("\n\n👋 Stopping watch mode...");
+    watchers.forEach((w) => w.close());
+    process.exit(0);
+  });
+
+  // Keep process alive
+  setInterval(() => {}, 1000);
+}
+
 function main() {
   const args = process.argv.slice(2);
 
   if (args.length === 0 || args[0].startsWith("-")) {
-    console.error("Usage: npx ts-node src/cli/render.ts <project> [--preview] [--frames 0-149]");
+    console.error("Usage: npx ts-node src/cli/render.ts <project> [--preview] [--frames 0-149] [--watch]");
     process.exit(1);
   }
 
   const projectArg = args[0];
   const preview = args.includes("--preview");
   const frames = parseFramesArg(args);
+  const watch = args.includes("--watch");
 
   // Resolve the project directory
   let dir: string;
@@ -112,8 +208,7 @@ function main() {
     compositionId = extractCompositionId(rootTsx);
   } catch (e) {
     // Fallback: derive from directory or project name
-    const fallbackName =
-      project?.name || path.basename(dir);
+    const fallbackName = project?.name || path.basename(dir);
     compositionId = fallbackName
       .replace(/[^a-zA-Z0-9]+/g, " ")
       .split(" ")
@@ -140,21 +235,12 @@ function main() {
     .toLowerCase();
   const outputPath = path.join(outDir, `${safeName}.mp4`);
 
-  let cmd = `timeout 10m npx remotion render ${entryPoint} ${compositionId} ${outputPath}`;
-  if (frames) {
-    cmd += ` --frames=${frames}`;
+  if (watch) {
+    watchProject(dir, entryPoint, compositionId, outputPath, frames, project?.name);
+    return;
   }
 
-  console.log(`Rendering "${project?.name || compositionId}"...`);
-  console.log(`  Entry:   ${entryPoint}`);
-  console.log(`  Comp:    ${compositionId}`);
-  console.log(`  Output:  ${outputPath}`);
-  if (frames) {
-    console.log(`  Frames:  ${frames}`);
-  }
-  console.log(`> ${cmd}`);
-
-  execSync(cmd, { stdio: "inherit" });
+  runRender(entryPoint, compositionId, outputPath, frames, project?.name);
 }
 
 if (require.main === module) {
