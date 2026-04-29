@@ -2,6 +2,32 @@
   "name": "opencut",
   "version": "0.1.0",
   "description": "Remotion-based video production engine. Record, transcribe, compose, render.",
+  "license": "MIT",
+  "author": "Federico De Ponte <depontefede@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/floomhq/opencut.git"
+  },
+  "bugs": {
+    "url": "https://github.com/floomhq/opencut/issues"
+  },
+  "homepage": "https://github.com/floomhq/opencut#readme",
+  "keywords": [
+    "video",
+    "remotion",
+    "typescript",
+    "video-production",
+    "automation",
+    "subtitles",
+    "cli",
+    "rendering"
+  ],
+  "bin": {
+    "opencut-init": "./bin/opencut-init.js",
+    "opencut-validate": "./bin/opencut-validate.js",
+    "opencut-transcribe": "./bin/opencut-transcribe.js",
+    "opencut-render": "./bin/opencut-render.js"
+  },
   "scripts": {
     "preview": "npx remotion studio src/examples/openslides/index.ts",
     "render": "timeout 10m npx remotion render src/examples/openslides/index.ts OpenSlidesDemo out/openslides-demo.mp4",
@@ -10,6 +36,7 @@
     "test-render": "timeout 5m npx remotion render src/examples/quickstart/index.ts QuickstartPreview --frames=0-149 out/quickstart-test-5s.mp4",
     "quickstart:preview": "npx remotion studio src/examples/quickstart/index.ts",
     "quickstart:render": "timeout 10m npx remotion render src/examples/quickstart/index.ts Quickstart out/quickstart.mp4",
+    "build": "tsc",
     "typecheck": "tsc --noEmit",
     "test": "node --require ts-node/register --test src/engine/__tests__/*.test.ts src/cli/__tests__/*.test.ts src/workflow/__tests__/*.test.ts",
     "test:coverage": "c8 npm test",
