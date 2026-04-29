@@ -1,40 +1,137 @@
-# OpenCut
+<h1 align="center">OpenCut — AI Video Production Engine</h1>
 
-![License: MIT](https://img.shields.io/badge/License-MIT-green.svg) ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg) ![Remotion](https://img.shields.io/badge/Remotion-4.x-blueviolet.svg)
+<p align="center">
+  <a href="https://github.com/floomhq/opencut/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License">
+  </a>
+  <img src="https://img.shields.io/badge/TypeScript-5.x-blue.svg" alt="TypeScript 5">
+  <img src="https://img.shields.io/badge/Remotion-4.x-blueviolet.svg" alt="Remotion 4">
+  <img src="https://img.shields.io/badge/Tests-125%20passing-brightgreen.svg" alt="125 tests passing">
+  <img src="https://img.shields.io/badge/Coverage-44%25-yellow.svg" alt="Code coverage">
+</p>
 
-Open-source, AI-powered video production engine built on Remotion. Define a timeline, point it at your footage and transcript, render a polished video.
+<p align="center">
+  <strong>Open-source, AI-powered video production engine built on Remotion.</strong><br>
+  Define a timeline in TypeScript, point it at your footage and transcript, render a polished MP4.<br>
+  Built for product demos, LinkedIn content, YouTube videos, and social media clips.
+</p>
 
-Built for product demo videos, LinkedIn content, and social media clips: word-level captions/subtitles, face-cam bubbles, keyword overlays, notification banners, title/end cards.
+---
+
+## Table of Contents
+
+- [What is OpenCut?](#what-is-opencut)
+- [Quick Start](#quick-start)
+- [Why OpenCut?](#why-opencut)
+- [Installation](#installation)
+- [Workflow](#workflow)
+- [CLI Commands](#cli-commands)
+- [Features](#features)
+- [Engine Components](#engine-components)
+- [Animation Utilities](#animation-utilities)
+- [Music Sync](#music-sync)
+- [Background Effects](#background-effects)
+- [Plugin API](#plugin-api)
+- [API Documentation](#api-documentation)
+- [Project Structure](#project-structure)
+- [Creating a New Video](#creating-a-new-video)
+- [Server Rendering](#rendering-on-a-server)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [Changelog](#changelog)
+- [License](#license)
+
+---
+
+## What is OpenCut?
+
+OpenCut is a **programmatic video production engine** that turns raw footage, screen recordings, and transcripts into professional MP4 videos using code. It combines:
+
+- **AI transcription** via OpenAI Whisper for word-level captions and automated subtitles
+- **React + Remotion** for frame-accurate, programmatic video rendering
+- **TypeScript-driven timelines** for declarative, version-controlled video editing
+- **A plugin system** for custom segments, background effects, and timeline transforms
+
+Unlike traditional video editors that lock you into GUIs and proprietary formats, OpenCut treats video as code — fully version-controlled, reproducible, and automatable.
+
+### Who is this for?
+
+- **Founders & marketers** creating product demo videos at scale
+- **Content creators** batch-producing LinkedIn and YouTube videos
+- **Educators** building automated course content with subtitles
+- **Developers** who want programmatic video generation in their apps
+- **Agencies** rendering client videos from data-driven templates
 
 ---
 
 ## Quick Start
 
-Get a rendered MP4 in 5 minutes:
+Get a rendered MP4 in under 5 minutes:
 
 ```bash
-# 1. Install
-git clone https://github.com/federicodeponte/opencut.git
+# 1. Clone and install
+git clone https://github.com/floomhq/opencut.git
 cd opencut
 npm install
 
-# 2. Scaffold a new video
-npx ts-node src/cli/init.ts my-video
+# 2. Scaffold a new video project
+npx opencut-init my-video
 
-# 3. Drop facecam.mp4 into public/
+# 3. Drop your facecam.mp4 into public/
 
-# 4. Edit src/examples/my-video/timeline.ts
+# 4. Edit the timeline
+# src/examples/my-video/timeline.ts
 
-# 5. Validate
-npx ts-node src/cli/validate.ts src/examples/my-video/timeline.ts
+# 5. Validate assets and timings
+npx opencut-validate src/examples/my-video/timeline.ts
 
-# 6. Render
-npx ts-node src/cli/render.ts my-video
+# 6. Render your video
+npx opencut-render my-video
 ```
 
-Find your video in `out/my-video.mp4`.
+Find your finished video at `out/my-video.mp4`.
 
-For a step-by-step guide, see **[QUICKSTART.md](./QUICKSTART.md)**.
+For a detailed walkthrough, see **[QUICKSTART.md](./QUICKSTART.md)**.
+
+---
+
+## Why OpenCut?
+
+| Problem | Traditional Editors | OpenCut |
+|---------|-------------------|---------|
+| Batch rendering | Manual export per video | `npx opencut-render project-name` |
+| Subtitles | Manual typing or expensive services | Whisper AI → auto-generated word-level captions |
+| Version control | Binary project files | Plain-text TypeScript — diffable, reviewable |
+| Automation | No API | Full CLI + programmable timeline |
+| Custom effects | Limited presets | React components + plugin system |
+| Reproducibility | "It works on my machine" | Deterministic rendering from code |
+
+---
+
+## Installation
+
+### Prerequisites
+
+- [Node.js 20+](https://nodejs.org/)
+- [npm](https://www.npmjs.com/) or [pnpm](https://pnpm.io/)
+- (Optional) [Whisper](https://github.com/openai/whisper) for AI transcription
+- (Optional) Chrome/Chromium for Remotion rendering
+
+### From Source
+
+```bash
+git clone https://github.com/floomhq/opencut.git
+cd opencut
+npm install
+```
+
+### npm (coming soon)
+
+```bash
+npm install -g opencut
+```
+
+> **Note:** OpenCut is not yet published to npm. Track progress in [this issue](https://github.com/floomhq/opencut/issues).
 
 ---
 
@@ -59,94 +156,232 @@ facecam    Whisper CLI    timeline.ts   validate.ts   out/*.mp4
 
 ## CLI Commands
 
-| Command | What it does |
+| Command | Description |
 |---------|-------------|
-| `npx ts-node src/cli/init.ts <name>` | Scaffold `src/examples/<name>/` with config, timeline, subtitles, Root.tsx, and index.ts. |
-| `npx ts-node src/cli/transcribe.ts <video>` | Run Whisper (if installed) or create an empty `subtitles.ts` template. |
-| `npx ts-node src/cli/validate.ts <timeline.ts>` | Check asset paths, segment durations, and timeline contiguity. |
-| `npx ts-node src/cli/render.ts <name>` | Render the full video for a project. |
-| `npx ts-node src/cli/render.ts <name> --preview` | Open Remotion studio for the project. |
-| `npx ts-node src/cli/render.ts <name> --watch` | Watch timeline/config/Root.tsx and auto-re-render on changes. |
-| `npx ts-node src/cli/render.ts <name> --frames 0-149` | Render only a specific frame range. |
-| `npm run typecheck` | Run `tsc --noEmit` across the repo. |
-| `npm run test-render` | Render a 5-second test of the built-in quickstart example. |
-| `npx remotion studio src/examples/<name>/index.ts` | Open the Remotion preview UI in the browser. |
+| `npx opencut-init <name>` | Scaffold a new project with config, timeline, subtitles, Root.tsx, and index.ts |
+| `npx opencut-transcribe <video>` | Run Whisper AI transcription or generate a subtitle template |
+| `npx opencut-validate <timeline.ts>` | Check asset paths, segment durations, and timeline contiguity |
+| `npx opencut-render <name>` | Render the full video for a project |
+| `npx opencut-render <name> --preview` | Open the Remotion Studio preview UI |
+| `npx opencut-render <name> --watch` | Watch files and auto-re-render on changes |
+| `npx opencut-render <name> --frames 0-149` | Render a specific frame range |
+| `npm run typecheck` | Run TypeScript type checking across the entire codebase |
+| `npm run test` | Run the full test suite (125 tests) |
+| `npm run test:coverage` | Run tests with code coverage reporting |
+| `npm run build` | Compile TypeScript to JavaScript with declaration files |
+| `npx remotion studio src/examples/<name>/index.ts` | Open the Remotion preview UI in the browser |
 
 ---
 
-## What's new
+## What's New
 
 - **Plugin system** — Register custom segment renderers, background effects, and timeline transforms. See [Plugin API](#plugin-api).
-- **Watch mode** — `render.ts --watch` auto-re-renders when you save timeline.ts, config.ts, or Root.tsx.
-- **Integration tests** — 110 tests including one that bundles and renders an actual frame via Remotion.
+- **Watch mode** — `opencut-render --watch` auto-re-renders when you save timeline.ts, config.ts, or Root.tsx.
+- **125 tests** — Full test coverage including integration tests that render actual frames via Remotion.
 - **Generative background effects** — Layer animated orbs, particles, grid, waves, dots, or vignette behind any segment without extra assets.
 - **TypingText component** — Character-by-character typewriter animation with blinking cursor, configurable speed, and accent-color glow.
 - **CrossfadeScene wrapper** — Reusable asymmetric fade-in / fade-out scene transition with cubic easing.
 - **Music sync / beat alignment** — Lock scene transitions to musical tempo with `beatsToFrames`, `barsToFrames`, and synced volume curves.
 - **Animation utilities** — Pure helper library for particles, wave motion, breathing effects, stagger reveals, lerp colors, Ken Burns presets, and audio-reactivity simulation.
 
+---
+
 ## Features
 
-- **AI transcription via Whisper** — word-level captions and subtitles with active-word highlighting, powered by OpenAI Whisper
-- **LinkedIn & social media ready** — renders 1080p/1920p MP4s optimized for content creation on LinkedIn, YouTube, and other platforms
-- **Timeline-driven** — declarative TypeScript timeline segments; no drag-and-drop, no UI bloat
-- **Face-cam picture-in-picture** — circular face bubble with configurable position, size, and filters
-- **Keyword overlays** — large animated text callouts to emphasize key moments
+- **AI-powered transcription** — Word-level captions and automated subtitles with active-word highlighting, powered by OpenAI Whisper
+- **Social media ready** — Render 1080p horizontal, 1920p vertical, square, and 4:5 MP4s optimized for LinkedIn, YouTube, Instagram, and TikTok
+- **Timeline-driven editing** — Declarative TypeScript timeline segments; no drag-and-drop, no UI bloat
+- **Face-cam picture-in-picture** — Circular face bubble with configurable position, size, and filters
+- **Keyword overlays** — Large animated text callouts to emphasize key moments in your video
 - **Notification banners** — macOS-style slide-in popups (WhatsApp, iMessage, generic)
-- **Title and end cards** — full-screen branded cards with CTA
+- **Title and end cards** — Full-screen branded cards with customizable CTAs
+- **Background effects** — Orbs, particles, grid, waves, dots, vignette — no extra assets needed
+- **Music beat synchronization** — Sync scene cuts and volume to musical tempo
 - **Open source** — MIT license, fully hackable TypeScript/React codebase
 
-## Powered by
+---
 
-| Tool | Role |
-|------|------|
-| [Remotion](https://remotion.dev) | React-based programmatic video rendering |
-| [Whisper](https://github.com/openai/whisper) | AI speech-to-text for word-level captions |
-| TypeScript + React | Type-safe timeline and component authoring |
+## Engine Components
 
-## Project structure
+| Component | Description |
+|-----------|-------------|
+| `VideoComposition` | Top-level component. Takes timeline, config, subtitles; sequences everything into the final video. |
+| `Segment` | Renders one timeline segment: background (facecam/screenshot/video/slides) + overlays. |
+| `FaceBubble` | Circular face-cam picture-in-picture. Configurable position, size, and filters. |
+| `SubtitleOverlay` | Groups words into 3-7 word phrases, highlights the active word. AI-transcribed captions from Whisper. |
+| `KeywordOverlay` | Large uppercase text with scale-in animation, positioned at the top. |
+| `TitleCard` | Full-screen title overlay with configurable text and colors. |
+| `EndCard` | Full-screen end card with CTA button and URL pill. |
+| `NotificationBanner` | macOS-style slide-in notifications. Presets: WhatsApp (green), iMessage (blue), generic (gray). |
+| `BackgroundEffects` | Generative SVG backgrounds: `orbs`, `particles`, `grid`, `waves`, `dots`, `vignette`. |
+| `TypingText` | Typewriter animation with optional blinking cursor, speed control, and accent glow. |
+| `CrossfadeScene` | Wraps a scene in `<AbsoluteFill>` with asymmetric fade-in / fade-out opacity. |
+| `AnimatedDiagram` | Step-by-step animated diagrams with reveal timing. |
+| `ComparisonTable` | Side-by-side feature comparison with animated rows. |
+| `AppMockup` | Device frame mockups for app demos. |
+| `AudioWaveform` | Real-time audio waveform visualization. |
+| `VideoBackground` | Full-motion video backgrounds. |
+
+All style props (`SubtitleStyle`, `KeywordStyle`, `CardStyle`, `EndCardStyle`) are optional overrides on `VideoComposition`.
+
+---
+
+## Animation Utilities
+
+Import pure helpers from `src/engine/animation`:
+
+- `generateParticles(count, seed)` — seeded, deterministic particle array
+- `updateParticlePosition(particle, frame, bounds)` — frame-based position with wrapping
+- `waveMotion(frame, frequency, amplitude, phase)` — sine-wave motion
+- `breathe(frame, minScale, maxScale, speed)` — pulsing scale between two values
+- `glitchOffset(frame, intensity)` — randomized offset for glitch effects
+- `lerpColor(color1, color2, t)` — linear interpolation between hex colors
+- `stagger(index, totalItems, totalDurationSeconds, frame, fps)` — 0-1 reveal progress for list items
+- `typewriter(text, frame, fps, charsPerSecond)` — substring for frame-accurate typing
+- `animatedCounter(from, to, progress, decimals)` — number interpolation with `easeOutExpo`
+- `getKenBurnsTransform(preset, progress)` — cinematic scale/translate for background footage
+- `simulateAudioReactivity(frame, intensity)` — frame-pulsed 0-1 value for bass-hit simulation
+- `springPresets` — Pre-configured spring physics presets for natural motion
+- `easing` — Curated easing functions: `easeInOutCubic`, `easeOutExpo`, `easeInBack`, etc.
+
+---
+
+## Music Sync
+
+Import beat-aware helpers from `src/engine/MusicSync`:
+
+- `getGridBPM(fps, framesPerBeat)` — derive target BPM from grid settings
+- `getBeatSyncPlaybackRate(sourceBPM, targetBPM)` — playback rate to lock music to tempo
+- `beatsToFrames(beats, bpm, fps)` — exact frame count for N beats
+- `barsToFrames(bars, bpm, fps)` — exact frame count for N bars (4/4)
+- `buildSceneStarts(durations, overlapFrames)` — compute crossfade start frames
+- `getSyncedMusicVolume(frame, totalFrames, baseVolume, fadeInFrames, fadeOutFrames)` — volume curve that fades in at the start and out at the end
+
+---
+
+## Background Effects
+
+Add a `backgroundEffect` field to any `TimelineSegment`:
+
+```ts
+backgroundEffect: {
+  type: "orbs",        // or "particles" | "grid" | "waves" | "dots" | "vignette"
+  accentColor: "#3b82f6",
+  intensity: 0.5,
+  orbCount: 2,         // only for "orbs"
+  particleCount: 40,   // only for "particles"
+}
+```
+
+Effects are rendered as SVG or CSS layers behind the segment content and animate automatically based on the current frame.
+
+---
+
+## Plugin API
+
+OpenCut supports plugins for custom segment types, background effects, and timeline transformations.
+
+```ts
+import { registerPlugin } from "./engine";
+
+registerPlugin({
+  name: "my-plugin",
+  segmentRenderers: {
+    "custom-scene": CustomSceneComponent,
+  },
+  backgroundEffectRenderers: {
+    "stars": StarsEffectComponent,
+  },
+  transformTimeline: (timeline) => {
+    // Modify or augment timeline before rendering
+    return timeline;
+  },
+});
+```
+
+### Plugin Hooks
+
+| Hook | Description |
+|------|-------------|
+| `segmentRenderers` | Map segment `type` strings to React components. Rendered instead of built-in segments. |
+| `backgroundEffectRenderers` | Map `backgroundEffect.type` strings to React components. |
+| `transformTimeline` | Receive the full timeline array, return a modified timeline. Applied in registration order. |
+
+### Plugin API Functions
+
+- `registerPlugin(plugin)` — Register a plugin globally.
+- `unregisterPlugin(name)` — Remove a plugin by name.
+- `clearPlugins()` — Remove all plugins.
+- `getSegmentRenderer(type)` — Look up a custom segment renderer.
+- `getBackgroundEffectRenderer(type)` — Look up a custom background effect.
+- `applyTimelineTransforms(timeline)` — Apply all registered timeline transforms.
+
+---
+
+## API Documentation
+
+Generate and browse TypeDoc API docs for the engine:
+
+```bash
+# Generate docs (outputs to docs/api/)
+npm run docs:generate
+
+# Serve docs locally on http://localhost:3000
+npm run docs:serve
+```
+
+The generated documentation covers all engine components, TypeScript types, interfaces, and utilities exported from `src/engine/index.ts` — including `VideoComposition`, `Segment`, `FaceBubble`, `SubtitleOverlay`, `KeywordOverlay`, `TitleCard`, `EndCard`, `NotificationBanner`, `BackgroundEffects`, `TypingText`, `CrossfadeScene`, animation helpers, music sync utilities, and their associated configuration types.
+
+---
+
+## Project Structure
 
 ```
 src/
-  engine/                   # Reusable video components
+  engine/                   # Reusable video components and utilities
     types.ts                # All TypeScript interfaces
     Composition.tsx         # Sequences timeline segments + audio
     Segment.tsx             # Renders one segment (background + overlays)
     FaceBubble.tsx          # Circular face-cam PiP
-    SubtitleOverlay.tsx     # Word-level captions/subtitles with active word highlight
+    SubtitleOverlay.tsx     # Word-level captions with active word highlight
     KeywordOverlay.tsx      # Large keyword text overlays
     TitleCard.tsx           # Full-screen title card
     EndCard.tsx             # Full-screen end card with CTA
     NotificationBanner.tsx  # Slide-in notification popups
-    BackgroundEffects.tsx   # Generative background effects (orbs, particles, grid, waves, dots, vignette)
+    BackgroundEffects.tsx   # Generative background effects
     CrossfadeScene.tsx      # Reusable fade-in/fade-out scene wrapper
     TypingText.tsx          # Typewriter text animation with cursor
-    animations.ts           # Pure animation utilities (particles, easing, Ken Burns, etc.)
+    animations.ts           # Pure animation utilities
     MusicSync.ts            # Beat-to-frame math and synced volume curves
+    plugin.ts               # Plugin registry for custom renderers
     index.ts                # Public API exports
   cli/
     init.ts                 # Scaffold a new video project
     transcribe.ts           # Whisper wrapper / subtitle template generator
     validate.ts             # Timeline and asset validator
-    render.ts               # Render helper by project name
+    render.ts               # Render helper with --watch, --preview, --frames
+  workflow/
+    loader.ts               # JSON/YAML project config loader
+    validator.ts            # Project config validation
+    generator.ts            # Remotion file generator from project config
+    types.ts                # Workflow types
   examples/
-    quickstart/             # Minimal 2-segment example (title + end card)
-    openslides/             # Example: OpenSlides product demo
-    format-demo/            # Example: background effects, typing text, and multi-format compositions
-    ai-engineer-basics/     # Example: long-form educational video
-    floom-launch/           # Example: SaaS product launch with beat-synced crossfades
-    hyperniche-launch/      # Example: competitive comparison + animated diagram
-    opendraft-research/     # Example: educational research video with kinetic typography
-    floom-launch/           # Example: SaaS product launch video
-    hyperniche-launch/      # Example: competitive comparison with animated diagram
-    opendraft-research/     # Example: educational research video with kinetic typography
+    quickstart/             # Minimal 2-segment example
+    openslides/             # Product demo video
+    format-demo/            # Background effects and multi-format demo
+    ai-engineer-basics/     # Long-form educational video
+    floom-launch/           # SaaS product launch with beat-synced crossfades
+    hyperniche-launch/      # Competitive comparison + animated diagram
+    opendraft-research/     # Educational research with kinetic typography
 ```
 
-## Creating a new video
+---
+
+## Creating a New Video
 
 Create a folder under `src/examples/your-project/` with three files:
 
-**config.ts**
+### config.ts
 
 ```ts
 import type { VideoConfig } from "../../engine";
@@ -163,7 +398,7 @@ export const MY_CONFIG: VideoConfig = {
 };
 ```
 
-**timeline.ts**
+### timeline.ts
 
 ```ts
 import type { TimelineSegment } from "../../engine";
@@ -204,7 +439,7 @@ export const TIMELINE: TimelineSegment[] = [
 ];
 ```
 
-**Root.tsx**
+### Root.tsx
 
 ```tsx
 import React from "react";
@@ -247,127 +482,50 @@ Place assets in `public/` (create the directory if it doesn't exist — it is gi
 npx remotion render src/examples/your-project/index.ts MyVideo out/my-video.mp4
 ```
 
-## API Documentation
+---
 
-Generate and browse TypeDoc API docs for the engine:
-
-```bash
-# Generate docs (outputs to docs/api/)
-npm run docs:generate
-
-# Serve docs locally on http://localhost:3000
-npm run docs:serve
-```
-
-The generated documentation covers all engine components, TypeScript types, interfaces, and utilities exported from `src/engine/index.ts` — including `VideoComposition`, `Segment`, `FaceBubble`, `SubtitleOverlay`, `KeywordOverlay`, `TitleCard`, `EndCard`, `NotificationBanner`, `BackgroundEffects`, `TypingText`, `CrossfadeScene`, animation helpers, music sync utilities, and their associated configuration types.
-
-## Engine components
-
-| Component | What it does |
-|-----------|-------------|
-| `VideoComposition` | Top-level component. Takes timeline, config, subtitles; sequences everything into the final video. |
-| `Segment` | Renders one timeline segment: background (facecam/screenshot/video/slides) + overlays. |
-| `FaceBubble` | Circular face-cam picture-in-picture. Configurable position, size, and filters. |
-| `SubtitleOverlay` | Groups words into 3-7 word phrases, highlights the active word. AI-transcribed captions/subtitles from Whisper. |
-| `KeywordOverlay` | Large uppercase text with scale-in animation, positioned at the top. |
-| `TitleCard` | Full-screen title overlay with configurable text and colors. |
-| `EndCard` | Full-screen end card with CTA button and URL pill. |
-| `NotificationBanner` | macOS-style slide-in notifications. Presets: WhatsApp (green), iMessage (blue), generic (gray). |
-| `BackgroundEffects` | Generative SVG backgrounds: `orbs`, `particles`, `grid`, `waves`, `dots`, `vignette`. |
-| `TypingText` | Typewriter animation with optional blinking cursor, speed control, and accent glow. |
-| `CrossfadeScene` | Wraps a scene in `<AbsoluteFill>` with asymmetric fade-in / fade-out opacity. |
-
-All style props (`SubtitleStyle`, `KeywordStyle`, `CardStyle`, `EndCardStyle`) are optional overrides on `VideoComposition`.
-
-## Animation utilities
-
-Import pure helpers from `src/engine/animations`:
-
-- `generateParticles(count, seed)` — seeded, deterministic particle array
-- `updateParticlePosition(particle, frame, bounds)` — frame-based position with wrapping
-- `waveMotion(frame, frequency, amplitude, phase)` — sine-wave motion
-- `breathe(frame, minScale, maxScale, speed)` — pulsing scale between two values
-- `lerpColor(color1, color2, t)` — linear interpolation between hex colors
-- `stagger(index, totalItems, totalDurationSeconds, frame, fps)` — 0-1 reveal progress for list items
-- `typewriter(text, frame, fps, charsPerSecond)` — substring for frame-accurate typing
-- `animatedCounter(from, to, progress, decimals)` — number interpolation with `easeOutExpo`
-- `getKenBurnsTransform(preset, progress)` — cinematic scale/translate for background footage
-- `simulateAudioReactivity(frame, intensity)` — frame-pulsed 0-1 value for bass-hit simulation
-
-## Music sync
-
-Import beat-aware helpers from `src/engine/MusicSync`:
-
-- `getGridBPM(fps, framesPerBeat)` — derive target BPM from grid settings
-- `getBeatSyncPlaybackRate(sourceBPM, targetBPM)` — playback rate to lock music to tempo
-- `beatsToFrames(beats, bpm, fps)` — exact frame count for N beats
-- `barsToFrames(bars, bpm, fps)` — exact frame count for N bars (4/4)
-- `buildSceneStarts(durations, overlapFrames)` — compute crossfade start frames
-- `getSyncedMusicVolume(frame, totalFrames, baseVolume, fadeInFrames, fadeOutFrames)` — volume curve that fades in at the start and out at the end
-
-## Background effects
-
-Add a `backgroundEffect` field to any `TimelineSegment`:
-
-```ts
-backgroundEffect: {
-  type: "orbs",        // or "particles" | "grid" | "waves" | "dots" | "vignette"
-  accentColor: "#3b82f6",
-  intensity: 0.5,
-  orbCount: 2,         // only for "orbs"
-  particleCount: 40,   // only for "particles"
-}
-```
-
-Effects are rendered as SVG or CSS layers behind the segment content and animate automatically based on the current frame.
-
-## Plugin API
-
-OpenCut supports plugins for custom segment types, background effects, and timeline transformations.
-
-```ts
-import { registerPlugin } from "./engine";
-
-registerPlugin({
-  name: "my-plugin",
-  segmentRenderers: {
-    "custom-scene": CustomSceneComponent,
-  },
-  backgroundEffectRenderers: {
-    "stars": StarsEffectComponent,
-  },
-  transformTimeline: (timeline) => {
-    // Modify or augment timeline before rendering
-    return timeline;
-  },
-});
-```
-
-### Plugin hooks
-
-| Hook | What it does |
-|------|-------------|
-| `segmentRenderers` | Map segment `type` strings to React components. Rendered instead of built-in segments. |
-| `backgroundEffectRenderers` | Map `backgroundEffect.type` strings to React components. |
-| `transformTimeline` | Receive the full timeline array, return a modified timeline. Applied in registration order. |
-
-### API functions
-
-- `registerPlugin(plugin)` — Register a plugin globally.
-- `unregisterPlugin(name)` — Remove a plugin by name.
-- `clearPlugins()` — Remove all plugins.
-- `getSegmentRenderer(type)` — Look up a custom segment renderer.
-- `getBackgroundEffectRenderer(type)` — Look up a custom background effect.
-- `applyTimelineTransforms(timeline)` — Apply all registered timeline transforms.
-
-## Rendering on a server
+## Rendering on a Server
 
 ```bash
 timeout 10m npx remotion render src/examples/openslides/index.ts OpenSlidesDemo out/video.mp4
 ```
 
-Use `timeout` to prevent runaway renders.
+Use `timeout` to prevent runaway renders on CI or server environments.
+
+---
+
+## Examples
+
+| Example | Description | Render Command |
+|---------|-------------|----------------|
+| **quickstart** | Minimal title + end card | `npm run test-render` |
+| **openslides** | Product demo with facecam + slides | `npm run render` |
+| **format-demo** | Background effects + typing text + multi-format | `npx remotion render src/examples/format-demo/index.ts FormatDemo out/format-demo.mp4` |
+| **ai-engineer-basics** | Long-form educational video with inline panels | `npm run ai-basics:render` |
+| **floom-launch** | SaaS launch with beat-synced crossfades | `npm run floom:render` |
+| **hyperniche-launch** | Competitive comparison + animated diagram | `npm run hyperniche:render` |
+| **opendraft-research** | Research video with kinetic typography | `npm run opendraft:render` |
+
+---
+
+## Contributing
+
+We welcome contributions! Please see **[CONTRIBUTING.md](./CONTRIBUTING.md)** for guidelines on reporting issues, submitting pull requests, and coding standards.
+
+---
+
+## Changelog
+
+See **[CHANGELOG.md](./CHANGELOG.md)** for a detailed history of releases and changes.
+
+---
 
 ## License
 
-MIT
+OpenCut is released under the [MIT License](./LICENSE).
+
+---
+
+<p align="center">
+  Built with ❤️ by <a href="https://github.com/federicodeponte">Federico De Ponte</a>
+</p>
