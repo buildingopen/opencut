@@ -4,13 +4,15 @@
   <a href="https://www.npmjs.com/package/opencut">
     <img src="https://img.shields.io/npm/v/opencut.svg" alt="npm version">
   </a>
+  <a href="https://github.com/floomhq/opencut/actions/workflows/ci.yml">
+    <img src="https://github.com/floomhq/opencut/actions/workflows/ci.yml/badge.svg" alt="CI">
+  </a>
   <a href="https://github.com/floomhq/opencut/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License">
   </a>
   <img src="https://img.shields.io/badge/TypeScript-5.x-blue.svg" alt="TypeScript 5">
   <img src="https://img.shields.io/badge/Remotion-4.x-blueviolet.svg" alt="Remotion 4">
   <img src="https://img.shields.io/badge/Tests-125%20passing-brightgreen.svg" alt="125 tests passing">
-  <img src="https://img.shields.io/badge/Coverage-44%25-yellow.svg" alt="Code coverage">
 </p>
 
 <p align="center">
@@ -327,7 +329,7 @@ registerPlugin({
 
 ## API Documentation
 
-Generate and browse TypeDoc API docs for the engine:
+Browse the [live API documentation](https://floomhq.github.io/opencut/api/) or generate locally:
 
 ```bash
 # Generate docs (outputs to docs/api/)
@@ -337,7 +339,7 @@ npm run docs:generate
 npm run docs:serve
 ```
 
-The generated documentation covers all engine components, TypeScript types, interfaces, and utilities exported from `src/engine/index.ts` — including `VideoComposition`, `Segment`, `FaceBubble`, `SubtitleOverlay`, `KeywordOverlay`, `TitleCard`, `EndCard`, `NotificationBanner`, `BackgroundEffects`, `TypingText`, `CrossfadeScene`, animation helpers, music sync utilities, and their associated configuration types.
+The generated documentation covers all engine components, TypeScript types, interfaces, and utilities exported from `src/engine/index.ts`.
 
 ---
 
